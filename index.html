@@ -35,6 +35,13 @@
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js';
 import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js';
+// Firebase Web app config from Firebase Console > Project settings > Your apps.
+window.SHIGUANG_FIREBASE_CONFIG = {
+  apiKey: "",
+  authDomain: "i002-1030.firebaseapp.com",
+  projectId: "i002-1030",
+  appId: ""
+};
 const firebaseConfig = window.SHIGUANG_FIREBASE_CONFIG;
 const authGate=document.getElementById('authGate'),authLoading=document.getElementById('authLoading'),plannerApp=document.getElementById('plannerApp'),authError=document.getElementById('authError'),authStatus=document.getElementById('authStatus'),googleSignIn=document.getElementById('googleSignIn'),signOutBtn=document.getElementById('signOutBtn'),accountChip=document.getElementById('accountChip'),accountEmail=document.getElementById('accountEmail'),accountAvatar=document.getElementById('accountAvatar');
 function showAuthError(message){authError.textContent=message;authStatus.textContent=''}

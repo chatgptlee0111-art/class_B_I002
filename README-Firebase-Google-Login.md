@@ -19,23 +19,7 @@
 3. `localhost` 僅供本機測試；正式網站使用以上 GitHub Pages 網域。
 
 ## 步驟四：把 Web 設定填入 index.html
-在 `index.html` 找到：
-
-```js
-const firebaseConfig = window.SHIGUANG_FIREBASE_CONFIG;
-```
-
-緊接著在它前面加入 Firebase Console 提供的公開 Web 設定（以你自己的值替換）：
-
-```js
-window.SHIGUANG_FIREBASE_CONFIG = {
-  apiKey: "你的 apiKey",
-  authDomain: "你的專案ID.firebaseapp.com",
-  projectId: "你的專案ID",
-  appId: "你的 appId"
-};
-const firebaseConfig = window.SHIGUANG_FIREBASE_CONFIG;
-```
+我已在 `index.html` 預填 `projectId` 與 `authDomain`。現在在 Firebase Console 的 Web App 設定卡複製 `apiKey` 和 `appId`，回到 `index.html`，找到 `window.SHIGUANG_FIREBASE_CONFIG` 區塊，把兩個空字串換成 Firebase 顯示的值。不要更動已填好的 `projectId` 和 `authDomain`。
 
 Firebase Web config 是識別用設定，不是 Admin 私鑰；仍應在 Firebase/Google Cloud 設定適當 API 限制。**不要**將 service account JSON、私鑰、OAuth client secret 放入 HTML、GitHub 或本文件。
 
