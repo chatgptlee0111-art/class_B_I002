@@ -1,3 +1,4 @@
+import { initializeActionEditor } from './assistant-actions.js';
 const escapeText = value => String(value ?? '');
 
 export function initializeScheduleAssistant({ userId, getData, model, aiSetupError = '', save, render, toast }) {
@@ -16,6 +17,7 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   const storageKey = `shiguang-ai-chat-v1-${userId}`;
   let history = [];
   let busy = false;
+  const actionEditor = initializeActionEditor({ getData, save, render, toast, appendMessage, messages });
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
     if (Array.isArray(saved)) {
@@ -61,11 +63,11 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
     if (history.length) {
       history.forEach(message => appendMessage(message.role, message.text, false));
     } else {
-      appendMessage('model', '嗨！我可以幫你查看行程、比較哪一天比較空，也可以回答課表相關問題。', false);
+      appendMessage('model', '嗨！我可以幫你新增、修改行程或課業任務，也能查今日安排與比較空檔。\n\n試試「幫我新增明天下午三點的微積分讀書行程」，或「把「微積分讀書」改到下週五 18:30」。我會先列出可編輯草稿，確認後才儲存。', false);
     }
   }
 
-  status.textContent = model ? 'Gemini · gemini-3.8-flash' : (aiSetupError ? 'Gemini 設定待完成' : '行程查詢可用');
+  status.textContent = model ? 'Gemini 問答 · 行程操作可用' : '本機行程操作可用 · Gemini 問答未啟用';
   if (aiSetupError) status.title = aiSetupError;
   launcher.hidden = false;
   restoreHistory();
@@ -89,13 +91,16 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   });
 
   clearButton?.addEventListener('click', () => {
+    if (busy) return;
+    if (actionEditor.hasUnsavedDraft()) { toast('請先完成草稿的雲端儲存再清除對話'); return; }
     if (!history.length) {
       toast('目前沒有已儲存的對話');
       return;
     }
     if (!confirm('清除這台瀏覽器中此帳號的 AI 對話紀錄？行程資料不會受到影響。')) return;
     history = [];
-    localStorage.removeItem(storageKey);
+    actionEditor.discardDraft();
+    try { localStorage.removeItem(storageKey); } catch {}
     restoreHistory();
   });
 
@@ -235,7 +240,7 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
         appendMessage('model', localTodaySummary());
         return;
       }
-      appendMessage('model', aiSetupError || 'Gemini 尚未完成設定。請先設定 Firebase AI Logic 與 App Check，再試一次。');
+      appendMessage('model', '目前可以直接新增、修改行程、查詢今日安排與比較空檔。\n\n例如：\n• 幫我新增明天下午三點「微積分讀書」\n• 把「微積分讀書」改到下週五 18:30\n• 今天有哪些行程？\n\n自由問答的 Gemini 尚未啟用；行程操作仍可使用。');
       return;
     }
 
@@ -280,7 +285,13 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
     appendMessage('user', question);
     busy = true;
     sendButton.disabled = true;
+    if (clearButton) clearButton.disabled = true;
     try {
+      if (actionEditor.hasUnsavedDraft()) {
+        appendMessage('model', '上一筆變更尚未完成雲端儲存，請先在草稿卡按「重試雲端儲存」，避免遺失修改。');
+        return;
+      }
+      if (actionEditor.handleRequest(question)) return;
       if (isDeleteAllEventsRequest(question)) {
         const data = getData();
         const count = (data.items || []).filter(item => item.type === 'event').length;
@@ -309,16 +320,18 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
         appendMessage('model', compareWeek(question));
         return;
       }
+      if (isTodayScheduleRequest(question)) { appendMessage('model', localTodaySummary()); return; }
       await sendToGemini(question);
     } finally {
       busy = false;
       sendButton.disabled = false;
+      if (clearButton) clearButton.disabled = false;
     }
   }
 
   form.addEventListener('submit', handleSubmit);
   input.addEventListener('keydown', event => {
-    if (event.key === 'Enter' && !event.shiftKey) {
+    if (event.key === 'Enter' && !event.shiftKey && !event.isComposing) {
       event.preventDefault();
       form.requestSubmit();
     }

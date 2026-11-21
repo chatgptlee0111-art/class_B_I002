@@ -112,9 +112,9 @@
   <header class="ai-header"><div class="ai-mark" aria-hidden="true">✦</div><div class="ai-heading"><h2 id="aiTitle">AI 行程助理</h2><p id="aiStatus" role="status" aria-live="polite">依照你的行程回答問題</p></div><div class="ai-header-actions"><button id="aiClear" type="button" title="清除本機對話">清除對話</button><button id="aiClose" class="ai-close" type="button" aria-label="關閉助理">×</button></div></header>
   <p class="ai-privacy">對話只保存在這台瀏覽器。使用 Gemini 時，問題及必要的行程名稱、科目、日期與時間會傳送給 Google；不會傳送備註。</p>
   <div id="aiMessages" class="ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
-  <div class="ai-suggestions" aria-label="建議問題"><button type="button" data-ai-prompt="今天有哪些行程？">今天有哪些行程？</button><button type="button" data-ai-prompt="下週哪一天比較空？">比較下週空檔</button><button type="button" data-ai-prompt="幫我刪除所有行程">刪除所有行程</button></div>
-  <form id="aiForm" class="ai-form"><textarea id="aiInput" rows="1" maxlength="500" aria-label="輸入行程問題" placeholder="問問你的行程…"></textarea><button id="aiSend" class="ai-send" type="submit" aria-label="送出訊息">↑</button></form>
-  <div class="ai-foot">刪除行程前會再次確認；課業任務與固定課表不會被刪除。</div>
+  <div class="ai-suggestions" aria-label="建議操作"><button type="button" data-ai-prompt="幫我新增行程">＋ 新增行程</button><button type="button" data-ai-prompt="幫我修改行程">修改行程</button><button type="button" data-ai-prompt="今天有哪些行程？">今日安排</button><button type="button" data-ai-prompt="下週哪一天比較空？">比較空檔</button></div>
+  <form id="aiForm" class="ai-form"><textarea id="aiInput" rows="1" maxlength="500" aria-label="輸入行程問題" placeholder="例如：新增明天下午三點「微積分讀書」"></textarea><button id="aiSend" class="ai-send" type="submit" aria-label="送出訊息">↑</button></form>
+  <div class="ai-foot">新增、修改會先顯示草稿，確認後才儲存。固定課程請至固定課表編輯。</div>
 </section>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
@@ -371,11 +371,11 @@ function render(){
 }
 function setTimetableZoom(value){
   const viewport=document.querySelector('.timetable-wrap');
-  const old=timetableZoom;timetableZoom=Math.max(.75,Math.min(2,Math.round(value*100)/100));
+  const old=timetableZoom;timetableZoom=Math.max(.5,Math.min(2,Math.round(value*100)/100));
   const scroll=viewport?{left:viewport.scrollLeft/old,top:viewport.scrollTop/old}:null;
   const grid=document.querySelector('.timetable-grid');if(grid)grid.style.zoom=timetableZoom;
   if(viewport&&scroll){viewport.scrollLeft=scroll.left*timetableZoom;viewport.scrollTop=scroll.top*timetableZoom}
-  $('zoomLevel').textContent=Math.round(timetableZoom*100)+'%';$('zoomOut').disabled=timetableZoom<=.75;$('zoomIn').disabled=timetableZoom>=2;
+  $('zoomLevel').textContent=Math.round(timetableZoom*100)+'%';$('zoomOut').disabled=timetableZoom<=.5;$('zoomIn').disabled=timetableZoom>=2;
 }
 function renderReminders(){
   const reminders=data.items.filter(x=>x.reminderEnabled&&x.remindAt).sort((a,b)=>a.remindAt.localeCompare(b.remindAt));

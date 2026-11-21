@@ -34,5 +34,12 @@ dialog{width:min(640px,calc(100% - 28px))}.account-chip,.auth-foot,.auth-status,
 .tt-time-label,.tt-time-mark{font-size:14px}.tt-lesson{padding:8px;font-size:15px;overflow:auto}.tt-lesson b{font-size:16px}.tt-lesson small{font-size:14px}
 .reminder-status{padding:0 24px 20px;color:#62736a;font-size:16px}.ai-bubble,.ai-form textarea{font-size:17px}.ai-heading p,.ai-privacy,.ai-suggestions button,.ai-foot{font-size:14px}
 button:focus-visible,[tabindex]:focus-visible{outline:3px solid #568b6c;outline-offset:3px}
+.ai-panel{width:min(480px,calc(100vw - 24px))}
+.ai-action-card{flex-shrink:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;border:1px solid #bad2c2;background:#fbfdfb;border-radius:14px;padding:16px;min-width:0}
+.ai-action-card h3,.ai-action-note,.ai-action-buttons,.ai-action-card>label:first-of-type{grid-column:1/-1}
+.ai-action-card h3{font-size:19px;margin:0}.ai-action-card label{font-size:15px;font-weight:600;display:grid;gap:5px;min-width:0}
+.ai-action-card input,.ai-action-card select{width:100%;min-width:0;font:inherit;font-size:16px;padding:9px;border:1px solid #c9d8ce;border-radius:8px;background:white;color:var(--ink)}
+.ai-action-card input:disabled,.ai-action-card select:disabled{opacity:.7}.ai-action-note{font-size:14px;color:#52675a;line-height:1.6;margin:0}
+.ai-action-buttons{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}.ai-action-buttons button{min-height:44px}.ai-action-card:focus-within{border-color:#568b6c}
 @media(max-width:1050px){.app{grid-template-columns:220px minmax(0,1fr)}.main{padding:24px 20px 100px}}
 @media(max-width:760px){.app{display:block}.main{padding:20px 14px 120px}.welcome h1{font-size:28px}.panel-head{padding:20px 16px}.top-actions{width:100%}.mobile-nav{overflow-x:auto;gap:8px;justify-content:space-between}.mobile-nav button{font-size:13px;min-width:62px;min-height:50px}.mobile-nav span{font-size:20px}.task-list,.deadlines{padding:0 16px 20px}.task-filters,.zoom-toolbar{padding-left:16px;padding-right:16px}.task-row{padding:18px 0}.task-bottom{align-items:flex-start}.zoom-toolbar{align-items:flex-start}.timetable-wrap{max-height:65vh}.ai-launcher{bottom:94px}.ai-panel{bottom:154px}.coverage-list{grid-template-columns:1fr}.date-controls{flex-wrap:wrap}.deadline{flex-wrap:wrap}.calendar-wrap .week-grid{min-width:840px}}
