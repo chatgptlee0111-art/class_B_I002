@@ -1,4 +1,4 @@
-import { initializeActionEditor } from './assistant-actions.js?v=20261122-ai-tested';
+import { initializeActionEditor } from './assistant-actions.js?v=20261122-safari-touch';
 const escapeText = value => String(value ?? '');
 
 export function initializeScheduleAssistant({ userId, getData, model, aiSetupError = '', save, render, toast }) {
@@ -18,6 +18,8 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   let history = [];
   let busy = false;
   let backgroundScroll = null;
+  let backgroundRegions = [];
+  let touchPoint = null;
   const actionEditor = initializeActionEditor({ getData, save, render, toast, appendMessage, messages });
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -73,6 +75,37 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   launcher.hidden = false;
   restoreHistory();
 
+  // iOS can pan the visual viewport even with a fixed body and overflow:hidden.
+  // Cancel only gestures that cannot be consumed by a scroll area in the panel.
+  function canConsumeScroll(target, dx, dy) {
+    if (!panel.contains(target)) return false;
+    const horizontal = Math.abs(dx) > Math.abs(dy);
+    const delta = horizontal ? dx : dy;
+    if (!delta) return true;
+    for (let node = target; node && panel.contains(node); node = node.parentElement) {
+      const style = getComputedStyle(node);
+      const overflow = horizontal ? style.overflowX : style.overflowY;
+      const size = horizontal ? node.scrollWidth - node.clientWidth : node.scrollHeight - node.clientHeight;
+      const position = horizontal ? node.scrollLeft : node.scrollTop;
+      if (/(auto|scroll)/.test(overflow) && size > 1 && (delta < 0 ? position > 1 : position < size - 1)) return true;
+      if (node === panel) break;
+    }
+    return false;
+  }
+  function startTouch(event) {
+    const point = event.touches.length === 1 ? event.touches[0] : null;
+    touchPoint = point ? { x: point.clientX, y: point.clientY } : null;
+  }
+  function guardTouch(event) {
+    if (!touchPoint || event.touches.length !== 1) return;
+    const point = event.touches[0];
+    const dx = touchPoint.x - point.clientX, dy = touchPoint.y - point.clientY;
+    touchPoint = { x: point.clientX, y: point.clientY };
+    if (!canConsumeScroll(event.target, dx, dy) && event.cancelable) event.preventDefault();
+  }
+  function guardWheel(event) {
+    if (!event.ctrlKey && !canConsumeScroll(event.target, event.deltaX, event.deltaY) && event.cancelable) event.preventDefault();
+  }
   function openPanel() {
     if (backgroundScroll) return;
     backgroundScroll = { left: window.scrollX, top: window.scrollY };
@@ -81,12 +114,25 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
     document.documentElement.classList.add('assistant-open');
     panel.hidden = false;
     document.body.classList.add('assistant-open');
+    backgroundRegions = [...document.querySelectorAll('#plannerApp,.mobile-nav')].map(node => ({ node, inert: node.inert }));
+    backgroundRegions.forEach(({ node }) => { node.inert = true; });
+    document.addEventListener('touchstart', startTouch, { passive: true, capture: true });
+    document.addEventListener('touchmove', guardTouch, { passive: false, capture: true });
+    document.addEventListener('wheel', guardWheel, { passive: false, capture: true });
     launcher.setAttribute('aria-expanded', 'true');
-    input.focus({ preventScroll: true });
+    if (window.matchMedia('(pointer:coarse)').matches) closeButton?.focus({ preventScroll: true });
+    else input.focus({ preventScroll: true });
   }
 
   function closePanel() {
+    if (panel.contains(document.activeElement)) document.activeElement.blur();
     panel.hidden = true;
+    document.removeEventListener('touchstart', startTouch, true);
+    document.removeEventListener('touchmove', guardTouch, true);
+    document.removeEventListener('wheel', guardWheel, true);
+    touchPoint = null;
+    backgroundRegions.forEach(({ node, inert }) => { node.inert = inert; });
+    backgroundRegions = [];
     document.body.classList.remove('assistant-open');
     document.documentElement.classList.remove('assistant-open');
     document.body.style.removeProperty('--assistant-page-top');
@@ -243,6 +289,7 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   }
 
   async function sendToGemini(question) {
+    const restoreInputFocus = document.activeElement === input && !window.matchMedia('(pointer:coarse)').matches;
     if (!model) {
       if (isTodayScheduleRequest(question)) {
         appendMessage('model', localTodaySummary());
@@ -285,7 +332,7 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
     } finally {
       sendButton.disabled = false;
       input.disabled = false;
-      input.focus();
+      if (!panel.hidden && restoreInputFocus) input.focus({ preventScroll: true });
     }
   }
 

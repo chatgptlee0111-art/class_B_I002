@@ -58,6 +58,12 @@ export function parseActionRequest(text, now=new Date()) {
 export function initializeActionEditor({getData,save,render,toast,appendMessage,messages}){
   let draft=null;
   function element(tag,text,className){const node=document.createElement(tag);if(text)node.textContent=text;if(className)node.className=className;return node}
+  function revealCard(card){
+    messages.append(card);
+    // scrollIntoView also scrolls the document/visual viewport on iOS.
+    if(card.getBoundingClientRect&&messages.getBoundingClientRect)messages.scrollTop+=card.getBoundingClientRect().top-messages.getBoundingClientRect().top;
+    else messages.scrollTop=messages.scrollHeight;
+  }
   function showDeleteDraft(parsed){
     if(draft?.applied){appendMessage('model','請先完成上一筆變更的雲端儲存。');return}
     draft?.card.remove();draft=null;
@@ -92,7 +98,7 @@ export function initializeActionEditor({getData,save,render,toast,appendMessage,
       try{if(!await save())throw Error('unsaved');card.remove();draft=null;render();toast(`已刪除 ${removed} 筆行程`);appendMessage('model',`已刪除 ${removed} 筆一般行程，並儲存至雲端。課業任務與固定課表均保留。`)}
       catch{note.textContent='雲端尚未儲存成功。刪除變更已保留在目前畫面，請重試。';submit.textContent='重試雲端儲存';submit.disabled=cancel.disabled=false}
     });
-    messages.append(card);card.scrollIntoView({block:'start',inline:'nearest'});
+    revealCard(card);
   }
   function showDraft(parsed){
     if(draft?.applied){appendMessage('model','上一筆變更尚未完成雲端儲存，請先在草稿卡按「重試雲端儲存」。');return}
@@ -149,7 +155,7 @@ export function initializeActionEditor({getData,save,render,toast,appendMessage,
         card.remove();draft=null;render();toast('行程已儲存至雲端');appendMessage('model',`已${parsed.action==='update'?'更新':'新增'}「${title.value.trim()}」：${date.value} ${time.value||'全天'}，並儲存至雲端。`);
       }catch{note.textContent='雲端尚未儲存成功。變更已保留在目前畫面，請重試；不會重複新增。';submit.textContent='重試雲端儲存';submit.disabled=false;cancel.disabled=false}
     });
-    messages.append(card);card.scrollIntoView({block:'start',inline:'nearest'});
+    revealCard(card);
   }
   return {handleRequest(text){const parsed=parseActionRequest(text);if(!parsed)return false;if(/固定課表|固定課程|每週|每周/.test(text)){appendMessage('model','每週重複的課程請到「固定課表」管理；助理只操作單次行程與課業任務。');return true}if(parsed.action==='delete'){showDeleteDraft(parsed);return true}appendMessage('model',parsed.action==='update'?'我已準備修改草稿，請選擇項目並核對新日期與時間。':'我已準備新增草稿，請確認或補齊資料後儲存。');showDraft(parsed);return true},hasUnsavedDraft:()=>!!draft?.applied,discardDraft(){if(!draft?.applied){draft?.card.remove();draft=null}}};
 }

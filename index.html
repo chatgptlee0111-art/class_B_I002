@@ -76,7 +76,7 @@
  .month-event small{font-size:8px}
 }
 </style>
-<link rel="stylesheet" href="./workspace.css?v=20261122-ai-scroll">
+<link rel="stylesheet" href="./workspace.css?v=20261122-safari-touch">
 <script src="./layout.js?v=20261122-responsive" defer></script>
 </head>
 <body>
@@ -109,7 +109,7 @@
 <dialog id="timetableDialog"><div class="modal-head"><h2 id="timetableDialogTitle">新增固定課程</h2><button class="close" id="closeTimetableDialog" aria-label="關閉">×</button></div><form id="timetableForm" class="form"><input type="hidden" id="slotId"><div class="field"><label for="slotDay">星期</label><select id="slotDay"><option value="1">星期一</option><option value="2">星期二</option><option value="3">星期三</option><option value="4">星期四</option><option value="5">星期五</option><option value="6">星期六</option><option value="0">星期日</option></select></div><div class="field"><label for="slotSubject">科目</label><select id="slotSubject"><option>工程圖學</option><option>普通物理</option><option>微積分</option><option>工程力學</option><option>材料科學導論</option><option>機械製造概論</option><option>計算機程式設計</option><option>工程數學</option></select></div><div class="field full"><label for="slotTitle">課程名稱</label><input id="slotTitle" required maxlength="70" placeholder="例如：數學（二）"></div><div class="field"><label for="slotStart">開始時間</label><input id="slotStart" type="time" value="08:00" required></div><div class="field"><label for="slotEnd">結束時間</label><input id="slotEnd" type="time" value="08:50" required></div><div class="field full"><label for="slotPlace">教室／地點</label><input id="slotPlace" maxlength="60" placeholder="例如：教室 302"></div><div class="field"><label for="slotCoverageStart">科目涵蓋開始日</label><input id="slotCoverageStart" type="date"></div><div class="field"><label for="slotCoverageEnd">科目涵蓋結束日</label><input id="slotCoverageEnd" type="date"></div><div class="field full"><label for="slotNotes">備註</label><textarea id="slotNotes" maxlength="300" placeholder="授課老師、教材或提醒⋯"></textarea></div><div class="modal-actions"><button type="button" id="deleteSlot" class="danger-btn">刪除課程</button><div class="right-actions"><button type="button" class="secondary-btn" id="cancelSlot">取消</button><button type="submit" class="add-btn">儲存課程</button></div></div></form></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <button id="aiLauncher" class="ai-launcher" type="button" aria-controls="aiPanel" aria-expanded="false" hidden><span class="ai-launcher-icon" aria-hidden="true">✦</span><span>AI 行程助理</span></button>
-<section id="aiPanel" class="ai-panel" role="dialog" aria-labelledby="aiTitle" aria-modal="false" hidden>
+<section id="aiPanel" class="ai-panel" role="dialog" aria-labelledby="aiTitle" aria-modal="true" hidden>
   <header class="ai-header"><div class="ai-mark" aria-hidden="true">✦</div><div class="ai-heading"><h2 id="aiTitle">AI 行程助理</h2><p id="aiStatus" role="status" aria-live="polite">依照你的行程回答問題</p></div><div class="ai-header-actions"><button id="aiClear" type="button" title="清除本機對話">清除對話</button><button id="aiClose" class="ai-close" type="button" aria-label="關閉助理">×</button></div></header>
   <details class="ai-privacy"><summary>資料使用說明</summary><p>對話只保存在這台瀏覽器。使用 Gemini 時，問題及必要的行程名稱、科目、日期與時間會傳送給 Google；不會傳送備註。</p></details>
   <div id="aiMessages" class="ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
@@ -123,7 +123,7 @@ import { getFirestore, doc, getDocFromServer, runTransaction } from 'https://www
 import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app-check.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-ai.js';
-import { initializeScheduleAssistant } from './ai-assistant.js?v=20261122-ai-scroll';
+import { initializeScheduleAssistant } from './ai-assistant.js?v=20261122-safari-touch';
 // Firebase Web app config from Firebase Console > Project settings > Your apps.
 window.SHIGUANG_FIREBASE_CONFIG = {
   apiKey: "AIzaSyD_CICR5JCU63pP8iV6mcUkexYMK3OD540",
