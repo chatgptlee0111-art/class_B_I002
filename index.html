@@ -76,7 +76,7 @@
  .month-event small{font-size:8px}
 }
 </style>
-<link rel="stylesheet" href="./workspace.css?v=20261122-responsive">
+<link rel="stylesheet" href="./workspace.css?v=20261122-ai-tested">
 <script src="./layout.js?v=20261122-responsive" defer></script>
 </head>
 <body>
@@ -115,7 +115,7 @@
   <div id="aiMessages" class="ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
   <div class="ai-suggestions" aria-label="建議操作"><button type="button" data-ai-prompt="幫我新增行程">＋ 新增行程</button><button type="button" data-ai-prompt="幫我修改行程">修改行程</button><button type="button" data-ai-prompt="今天有哪些行程？">今日安排</button><button type="button" data-ai-prompt="下週哪一天比較空？">比較空檔</button></div>
   <form id="aiForm" class="ai-form"><textarea id="aiInput" rows="1" maxlength="500" aria-label="輸入行程問題" placeholder="輸入問題或行程需求…"></textarea><button id="aiSend" class="ai-send" type="submit" aria-label="送出訊息">↑</button></form>
-  <div class="ai-foot">新增、修改會先顯示草稿，確認後才儲存。固定課程請至固定課表編輯。</div>
+  <div class="ai-foot">新增、修改與刪除都會先確認，再儲存。固定課程請至固定課表編輯。</div>
 </section>
 <script type="module">
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
@@ -123,7 +123,7 @@ import { getFirestore, doc, getDocFromServer, runTransaction } from 'https://www
 import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app-check.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-ai.js';
-import { initializeScheduleAssistant } from './ai-assistant.js?v=20261122-responsive';
+import { initializeScheduleAssistant } from './ai-assistant.js?v=20261122-ai-tested';
 // Firebase Web app config from Firebase Console > Project settings > Your apps.
 window.SHIGUANG_FIREBASE_CONFIG = {
   apiKey: "AIzaSyD_CICR5JCU63pP8iV6mcUkexYMK3OD540",

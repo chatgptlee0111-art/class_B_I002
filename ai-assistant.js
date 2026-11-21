@@ -1,4 +1,4 @@
-import { initializeActionEditor } from './assistant-actions.js?v=20261122-responsive';
+import { initializeActionEditor } from './assistant-actions.js?v=20261122-ai-tested';
 const escapeText = value => String(value ?? '');
 
 export function initializeScheduleAssistant({ userId, getData, model, aiSetupError = '', save, render, toast }) {
@@ -195,13 +195,6 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
     return `${nextWeek ? '下週' : '本週剩餘日期'}目前看起來比較空的是：${bestText}。\n\n${detail}\n\n估算以每日 08:00–22:00 為區間（今天只計算現在起至 22:00）；沒有結束時間的行程按 1 小時計算，固定課使用課表起訖時間，作業期限不計入占用時數。`;
   }
 
-  function isDeleteAllEventsRequest(text) {
-    const deleteVerb = /刪除|刪掉|清除|移除/.test(text);
-    const allItems = /所有|全部|整個|全部的/.test(text);
-    const schedule = /行程|預約|活動/.test(text);
-    return deleteVerb && allItems && schedule;
-  }
-
   function isTodayScheduleRequest(text) {
     return /(今天|今日)/.test(text) && /(行程|安排|課程|課表|待辦)/.test(text);
   }
@@ -298,30 +291,6 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
         return;
       }
       if (actionEditor.handleRequest(question)) return;
-      if (isDeleteAllEventsRequest(question)) {
-        const data = getData();
-        const count = (data.items || []).filter(item => item.type === 'event').length;
-        if (!count) {
-          appendMessage('model', '目前沒有一般行程可刪除。課業任務與固定課表不屬於這項刪除範圍。');
-          return;
-        }
-        const confirmed = confirm(`即將刪除 ${count} 筆一般行程；課業任務與固定課表會保留。此操作無法復原，確定繼續嗎？`);
-        if (!confirmed) {
-          appendMessage('model', '已取消，沒有刪除任何行程。');
-          return;
-        }
-        data.items = data.items.filter(item => item.type !== 'event');
-        const saved = await save();
-        render();
-        if (saved) {
-          toast(`已刪除 ${count} 筆行程`);
-          appendMessage('model', `已刪除 ${count} 筆一般行程。課業任務與固定課表都保留了。`);
-        } else {
-          toast('行程已移除，但雲端尚未儲存；請按右上方「重試儲存」');
-          appendMessage('model', `目前畫面已移除 ${count} 筆一般行程，但雲端儲存尚未完成。請按右上方「重試儲存」後再離開頁面；課業任務與固定課表都保留了。`);
-        }
-        return;
-      }
       if (isCompareRequest(question)) {
         appendMessage('model', compareWeek(question));
         return;
