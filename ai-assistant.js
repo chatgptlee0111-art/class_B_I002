@@ -87,7 +87,7 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
       const overflow = horizontal ? style.overflowX : style.overflowY;
       const size = horizontal ? node.scrollWidth - node.clientWidth : node.scrollHeight - node.clientHeight;
       const position = horizontal ? node.scrollLeft : node.scrollTop;
-      if (/(auto|scroll)/.test(overflow) && size > 1 && (delta < 0 ? position > 1 : position < size - 1)) return true;
+      if (/(auto|scroll)/.test(overflow) && size > 1) return delta < 0 ? position > 1 : position < size - 1;
       if (node === panel) break;
     }
     return false;
