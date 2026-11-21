@@ -43,3 +43,52 @@ button:focus-visible,[tabindex]:focus-visible{outline:3px solid #568b6c;outline-
 .ai-action-buttons{display:flex;justify-content:flex-end;gap:10px;flex-wrap:wrap}.ai-action-buttons button{min-height:44px}.ai-action-card:focus-within{border-color:#568b6c}
 @media(max-width:1050px){.app{grid-template-columns:220px minmax(0,1fr)}.main{padding:24px 20px 100px}}
 @media(max-width:760px){.app{display:block}.main{padding:20px 14px 120px}.welcome h1{font-size:28px}.panel-head{padding:20px 16px}.top-actions{width:100%}.mobile-nav{overflow-x:auto;gap:8px;justify-content:space-between}.mobile-nav button{font-size:13px;min-width:62px;min-height:50px}.mobile-nav span{font-size:20px}.task-list,.deadlines{padding:0 16px 20px}.task-filters,.zoom-toolbar{padding-left:16px;padding-right:16px}.task-row{padding:18px 0}.task-bottom{align-items:flex-start}.zoom-toolbar{align-items:flex-start}.timetable-wrap{max-height:65vh}.ai-launcher{bottom:94px}.ai-panel{bottom:154px}.coverage-list{grid-template-columns:1fr}.date-controls{flex-wrap:wrap}.deadline{flex-wrap:wrap}.calendar-wrap .week-grid{min-width:840px}}
+
+/* Contain intrinsic control widths, especially native iOS date/time inputs. */
+html{scrollbar-gutter:stable;-webkit-text-size-adjust:100%}
+.main,.panel,.panel-head>*,.welcome>*,.topline>*,.top-actions>*,.task-row>*,.timeline-card,.deadline-copy{min-width:0}
+.task-title,.task-meta,.subtask-check-row span,.coverage-name,.coverage-period,.deadline-copy,.timeline-card,.ai-bubble,.auth-error,#cloudStatus{overflow-wrap:anywhere}
+.top-actions{max-width:100%}.account-chip{min-width:0}.account-avatar,.avatar,.iconbtn{flex-shrink:0}
+#cloudStatus{font-size:14px;flex:1 1 160px}.panel-head .switch{max-width:100%;flex-wrap:wrap}
+.form{grid-template-columns:repeat(2,minmax(0,1fr))}.field,.subtask-list,.subtask-edit{min-width:0}
+.field input,.field select,.field textarea{display:block;min-width:0;max-width:100%;box-sizing:border-box}
+.field input[type=date],.field input[type=time],.field input[type=datetime-local],.ai-action-card input[type=date],.ai-action-card input[type=time]{appearance:none;-webkit-appearance:none;min-width:0;max-width:100%;width:100%;text-align:left;min-height:46px}
+input::-webkit-date-and-time-value{text-align:left;min-height:1.4em}
+.field .reminder-toggle{display:flex;align-items:center;gap:10px;line-height:1.6}
+.field input[type=checkbox]{width:20px;min-width:20px;max-width:20px;height:20px;min-height:20px;padding:0;flex:0 0 20px;margin:0}
+.subtask-edit input{min-width:0;width:0;flex:1}.subtask-edit button{flex:0 0 40px;min-height:44px}
+.modal-actions,.right-actions{flex-wrap:wrap;gap:10px}.right-actions{margin-left:auto}
+dialog{position:fixed;left:0;right:0;top:calc(var(--visual-top,0px) + var(--visual-height,100dvh)/2);bottom:auto;transform:translateY(-50%);margin:0 auto;max-height:calc(var(--visual-height,100dvh) - 24px);max-width:calc(100% - 24px);overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain}
+.modal-head{position:sticky;top:0;z-index:5;background:white;gap:14px;align-items:flex-start}.modal-head h2{min-width:0;margin:0;line-height:1.4;overflow-wrap:anywhere}.modal-head .close{flex:0 0 40px;width:40px;height:40px;font-size:24px}
+html:has(dialog[open]){overflow:hidden}.toast{max-width:calc(100vw - 32px);overflow-wrap:anywhere;text-align:center}
+.ai-panel{display:flex;flex-direction:column;max-width:calc(100vw - 24px);height:min(720px,calc(var(--visual-height,100dvh) - 112px))}
+.ai-header,.ai-privacy,.ai-suggestions,.ai-form,.ai-foot{flex-shrink:0;min-width:0}.ai-header-actions{flex-shrink:0}
+.ai-header-actions button{min-height:40px}.ai-heading h2,.ai-heading p{overflow-wrap:anywhere}
+.ai-messages{flex:1 1 0;min-height:0;min-width:0}.ai-messages>*{min-width:0}
+.ai-privacy summary{cursor:pointer;font-weight:600}.ai-privacy p{margin:6px 0 0}
+.ai-suggestions{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-top:8px}.ai-suggestions button{flex-shrink:0;white-space:nowrap;min-height:40px}
+.ai-form textarea{min-width:0;resize:none;max-height:90px}.ai-form .ai-send{min-width:42px}
+.ai-launcher[aria-expanded=true]{visibility:hidden}
+.ai-action-card{width:100%;max-width:100%}.ai-action-card select{max-width:100%}
+@media(max-width:760px){
+ .mobile-nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;overflow:visible;padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right));padding-bottom:calc(8px + env(safe-area-inset-bottom))}
+ .mobile-nav button{min-width:0;width:100%;font-size:12px;padding:4px 0;white-space:nowrap}
+ .main{padding-bottom:calc(112px + env(safe-area-inset-bottom))}.welcome>div{width:100%}
+ .date-controls{display:grid;grid-template-columns:40px minmax(0,1fr) 40px auto;gap:4px}.date-read{min-width:0;font-size:15px;padding:4px;overflow-wrap:anywhere}.date-controls button{min-height:44px}
+ .top-actions{gap:8px}.account-chip{max-width:calc(100% - 110px)}.account-email{max-width:150px}#cloudStatus{flex-basis:100%}
+ .panel-head .switch{flex:1 1 auto}.panel-title{font-size:21px}.task-actions{flex-wrap:wrap}.subtask-check-row input{flex-shrink:0}
+ .today-timeline{padding:8px 14px 18px}.timeline-row{grid-template-columns:55px 12px minmax(0,1fr)}.timeline-card{margin-left:8px;padding:10px}
+ .ai-launcher{bottom:calc(88px + env(safe-area-inset-bottom));right:12px}
+ .ai-panel{top:calc(var(--visual-top,0px) + 8px);bottom:auto;right:8px;width:calc(100% - 16px);max-width:calc(100% - 16px);height:calc(var(--visual-height,100dvh) - 16px);border-radius:16px}
+ .ai-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:12px}.ai-mark{display:none}.ai-heading h2{font-size:18px}.ai-heading p{font-size:13px}.ai-header-actions{gap:0}.ai-header-actions button{padding:7px;max-width:68px}
+ .ai-privacy{margin:6px 10px 0;padding:7px 10px}.ai-privacy[open]{max-height:22vh;overflow:auto}.ai-messages{padding:12px 10px}.ai-bubble{max-width:94%;font-size:16px}
+ .ai-suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;overflow:visible}.ai-suggestions button{min-width:0;white-space:normal;padding:7px 6px}
+ .ai-foot{font-size:12px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.toast{bottom:calc(90px + env(safe-area-inset-bottom))}
+ body.assistant-open{overflow:hidden}
+}
+@media(max-width:600px){
+ dialog{width:calc(100% - 24px);border-radius:16px}.modal-head{padding:16px}.modal-head h2{font-size:21px}.form{grid-template-columns:minmax(0,1fr);padding:16px;gap:16px}.field.full{grid-column:1}.field label{font-size:16px}
+ .field input,.field select,.field textarea{font-size:16px}.ai-action-card{grid-template-columns:minmax(0,1fr);padding:12px}.ai-action-card>label{grid-column:1}.ai-action-card h3,.ai-action-note,.ai-action-buttons{grid-column:1}
+ .modal-actions{align-items:center}.right-actions{margin-left:auto;justify-content:flex-end}.subject-coverage{padding:0 16px 20px}
+}
+@media(max-height:480px){.ai-panel{top:calc(var(--visual-top,0px) + 8px);bottom:auto;height:calc(var(--visual-height,100dvh) - 16px)}.ai-foot{display:none}.ai-header{padding:8px 12px}.ai-privacy{margin-top:4px}.ai-form{padding-top:6px;padding-bottom:8px}.ai-suggestions{padding-bottom:6px;grid-template-columns:repeat(4,minmax(0,1fr))}.ai-suggestions button{font-size:12px;padding:6px 3px}}

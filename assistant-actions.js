@@ -99,7 +99,7 @@ export function initializeActionEditor({getData,save,render,toast,appendMessage,
         card.remove();draft=null;render();toast('行程已儲存至雲端');appendMessage('model',`已${parsed.action==='update'?'更新':'新增'}「${title.value.trim()}」：${date.value} ${time.value||'全天'}，並儲存至雲端。`);
       }catch{note.textContent='雲端尚未儲存成功。變更已保留在目前畫面，請重試；不會重複新增。';submit.textContent='重試雲端儲存';submit.disabled=false;cancel.disabled=false}
     });
-    messages.append(card);messages.scrollTop=messages.scrollHeight;
+    messages.append(card);card.scrollIntoView({block:'start',inline:'nearest'});
   }
   return {handleRequest(text){const parsed=parseActionRequest(text);if(!parsed)return false;if(/固定課表|固定課程|每週|每周/.test(text)){appendMessage('model','每週重複的課程請到「固定課表」新增或編輯；助理草稿目前支援單次行程與課業任務。');return true}appendMessage('model',parsed.action==='update'?'我已準備修改草稿，請選擇項目並核對新日期與時間。':'我已準備新增草稿，請確認或補齊資料後儲存。');showDraft(parsed);return true},hasUnsavedDraft:()=>!!draft?.applied,discardDraft(){if(!draft?.applied){draft?.card.remove();draft=null}}};
 }

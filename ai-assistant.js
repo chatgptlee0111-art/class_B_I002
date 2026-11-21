@@ -1,4 +1,4 @@
-import { initializeActionEditor } from './assistant-actions.js';
+import { initializeActionEditor } from './assistant-actions.js?v=20261122-responsive';
 const escapeText = value => String(value ?? '');
 
 export function initializeScheduleAssistant({ userId, getData, model, aiSetupError = '', save, render, toast }) {
@@ -74,12 +74,14 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
 
   function openPanel() {
     panel.hidden = false;
+    document.body.classList.add('assistant-open');
     launcher.setAttribute('aria-expanded', 'true');
     input.focus();
   }
 
   function closePanel() {
     panel.hidden = true;
+    document.body.classList.remove('assistant-open');
     launcher.setAttribute('aria-expanded', 'false');
     launcher.focus();
   }

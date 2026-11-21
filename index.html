@@ -76,7 +76,8 @@
  .month-event small{font-size:8px}
 }
 </style>
-<link rel="stylesheet" href="./workspace.css">
+<link rel="stylesheet" href="./workspace.css?v=20261122-responsive">
+<script src="./layout.js?v=20261122-responsive" defer></script>
 </head>
 <body>
 <div id="authLoading" class="auth-loading">正在確認登入狀態…</div>
@@ -110,10 +111,10 @@
 <button id="aiLauncher" class="ai-launcher" type="button" aria-controls="aiPanel" aria-expanded="false" hidden><span class="ai-launcher-icon" aria-hidden="true">✦</span><span>AI 行程助理</span></button>
 <section id="aiPanel" class="ai-panel" role="dialog" aria-labelledby="aiTitle" aria-modal="false" hidden>
   <header class="ai-header"><div class="ai-mark" aria-hidden="true">✦</div><div class="ai-heading"><h2 id="aiTitle">AI 行程助理</h2><p id="aiStatus" role="status" aria-live="polite">依照你的行程回答問題</p></div><div class="ai-header-actions"><button id="aiClear" type="button" title="清除本機對話">清除對話</button><button id="aiClose" class="ai-close" type="button" aria-label="關閉助理">×</button></div></header>
-  <p class="ai-privacy">對話只保存在這台瀏覽器。使用 Gemini 時，問題及必要的行程名稱、科目、日期與時間會傳送給 Google；不會傳送備註。</p>
+  <details class="ai-privacy"><summary>資料使用說明</summary><p>對話只保存在這台瀏覽器。使用 Gemini 時，問題及必要的行程名稱、科目、日期與時間會傳送給 Google；不會傳送備註。</p></details>
   <div id="aiMessages" class="ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
   <div class="ai-suggestions" aria-label="建議操作"><button type="button" data-ai-prompt="幫我新增行程">＋ 新增行程</button><button type="button" data-ai-prompt="幫我修改行程">修改行程</button><button type="button" data-ai-prompt="今天有哪些行程？">今日安排</button><button type="button" data-ai-prompt="下週哪一天比較空？">比較空檔</button></div>
-  <form id="aiForm" class="ai-form"><textarea id="aiInput" rows="1" maxlength="500" aria-label="輸入行程問題" placeholder="例如：新增明天下午三點「微積分讀書」"></textarea><button id="aiSend" class="ai-send" type="submit" aria-label="送出訊息">↑</button></form>
+  <form id="aiForm" class="ai-form"><textarea id="aiInput" rows="1" maxlength="500" aria-label="輸入行程問題" placeholder="輸入問題或行程需求…"></textarea><button id="aiSend" class="ai-send" type="submit" aria-label="送出訊息">↑</button></form>
   <div class="ai-foot">新增、修改會先顯示草稿，確認後才儲存。固定課程請至固定課表編輯。</div>
 </section>
 <script type="module">
@@ -122,7 +123,7 @@ import { getFirestore, doc, getDocFromServer, runTransaction } from 'https://www
 import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
 import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app-check.js';
 import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-ai.js';
-import { initializeScheduleAssistant } from './ai-assistant.js';
+import { initializeScheduleAssistant } from './ai-assistant.js?v=20261122-responsive';
 // Firebase Web app config from Firebase Console > Project settings > Your apps.
 window.SHIGUANG_FIREBASE_CONFIG = {
   apiKey: "AIzaSyD_CICR5JCU63pP8iV6mcUkexYMK3OD540",
