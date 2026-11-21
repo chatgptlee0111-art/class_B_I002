@@ -11,13 +11,19 @@
 
 ## Gemini 自由問答
 
-`index.html` 已加入 Firebase AI Logic 前端整合、App Check 初始化位置與行程助理介面。Gemini 使用穩定模型 `gemini-3.8-flash`；刪除行程由網頁本地程式處理，並會先要求確認，不會讓 Gemini 直接修改資料。
+`index.html` 已完成 Firebase AI Logic 與 reCAPTCHA Enterprise App Check 整合，並已開啟 Gemini 自由問答。模型使用 `gemini-3.5-flash-lite`，可說明一般知識、課業觀念與讀書方法；個人行程問題只依附上的資料回答。新增、修改及刪除仍由本機確認流程處理，模型不會直接修改資料。
 
-## 尚須完成的 Firebase 設定
+## Firebase 啟用紀錄
+
+2026-11-21：管理者完成 Firebase Console 的 AI Logic「開始使用」流程後，已確認 `firebasevertexai.googleapis.com` 與 `generativelanguage.googleapis.com` 均為 ENABLED。App Check 已為拾光 Web App 註冊 SCORE 網站金鑰（僅允許正式網域 `chatgptlee0111-art.github.io`、TTL 1 小時、最低風險分數 0.5），且已填入前端公開 site key、開啟 `SHIGUANG_AI_LOGIC_PROVISIONED`。
+
+Gemini 3.8 Flash 的實測曾回傳需求量過高，因此目前採用已實際成功回覆的 Gemini 3.5 Flash-Lite。實測使用不含私人資料的測試句，透過暫時 App Check 憑證取得回覆後立即刪除測試憑證。一般請求逾時上限為 45 秒；額度限制、服務忙碌與 App Check 錯誤會分別顯示提示。
+
+以下步驟供未來更換專案時參考；目前專案無須重複建立金鑰或接受條款。
 
 ### 1. 接受 Google Generative Language API 服務條款
 
-Firebase CLI 初始化回報專案尚未接受此條款。請以專案管理者帳號開啟 [Generative Language API 服務條款](https://console.cloud.google.com/terms/generative-language-api?project=i002-1030)並自行接受。
+新專案若回傳 `TOS_REQUIRED`，請以專案管理者帳號開啟 [Generative Language API 服務條款](https://console.cloud.google.com/terms/generative-language-api?project=i002-1030)閱讀並接受，再完成 Firebase AI Logic「開始使用」流程。
 
 ### 2. 啟用 Firebase AI Logic
 

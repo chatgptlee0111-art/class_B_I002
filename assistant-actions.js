@@ -7,6 +7,7 @@ export function validDate(value){
   const d=new Date(value+'T00:00:00');return !Number.isNaN(d.getTime())&&dayKey(d)===value;
 }
 export function parseActionRequest(text, now=new Date()) {
+  if(/^(?:請問|我想知道|我該|我應該|請解釋)?(?:如何|怎麼|怎樣|為什麼|什麼)/.test(text.trim()))return null;
   const update=/(修改|更改|改成|改到|改為|移到|挪到|延到|延後|提前|調整)/.test(text);
   if(!update&&!/(新增|建立|加入|安排|排入|加一|加個|加筆)/.test(text))return null;
   const quoted=text.match(/[「“"]([^」”"]+)[」”"]/);

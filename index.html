@@ -132,9 +132,9 @@ window.SHIGUANG_FIREBASE_CONFIG = {
 };
 // Firebase Console > App Check > register the Web app with reCAPTCHA Enterprise.
 // This is a public site key, not a secret. Keep it empty until the provider is registered.
-window.SHIGUANG_RECAPTCHA_ENTERPRISE_SITE_KEY = '';
+window.SHIGUANG_RECAPTCHA_ENTERPRISE_SITE_KEY = '6LfVjysuAAAAAGdB7Lijx7M5N00KEPoEHT08nmrr';
 // Set true after `firebase init ailogic` succeeds for the Web app.
-window.SHIGUANG_AI_LOGIC_PROVISIONED = false;
+window.SHIGUANG_AI_LOGIC_PROVISIONED = true;
 const firebaseConfig = window.SHIGUANG_FIREBASE_CONFIG;
 const authGate=document.getElementById('authGate'),authLoading=document.getElementById('authLoading'),plannerApp=document.getElementById('plannerApp'),authError=document.getElementById('authError'),authStatus=document.getElementById('authStatus'),googleSignIn=document.getElementById('googleSignIn'),signOutBtn=document.getElementById('signOutBtn'),accountChip=document.getElementById('accountChip'),accountEmail=document.getElementById('accountEmail'),accountAvatar=document.getElementById('accountAvatar');
 function showAuthError(message){authError.textContent=message;authStatus.textContent=''}
@@ -149,7 +149,7 @@ else if(!recaptchaSiteKey)aiSetupError='尚未設定 reCAPTCHA Enterprise App Ch
 else try{
   initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(recaptchaSiteKey),isTokenAutoRefreshEnabled:true});
   const ai=getAI(app,{backend:new GoogleAIBackend(),useLimitedUseAppCheckTokens:true});
-  aiModel=getGenerativeModel(ai,{model:'gemini-3.8-flash',systemInstruction:'你是拾光課業行程助理。以繁體中文簡潔回答，僅依照使用者訊息附上的行程資料作答；不得捏造行程、日期或空檔。遇到不完整資料時要明確說明。不要執行或聲稱執行任何資料修改。',generationConfig:{temperature:0.3,maxOutputTokens:900}});
+  aiModel=getGenerativeModel(ai,{model:'gemini-3.5-flash-lite',systemInstruction:'你是拾光學習與行程助理。以繁體中文清楚回答課業觀念、讀書方法與一般問題。涉及使用者自己的課表、期限、日期與空檔時，只能依訊息附上的行程資料作答，沒有資料時明確說明，不得捏造。一般知識可以說明，但要區分建議與已登記行程。你不能直接修改任何資料；新增或修改行程應引導使用者使用草稿卡，確認後才會儲存。不要聲稱已執行未實際執行的動作。',generationConfig:{temperature:0.3,maxOutputTokens:1400}},{timeout:45000});
 }catch(error){aiSetupError='App Check 初始化失敗：'+(error.code||error.message||'請確認 site key 與 Firebase App Check 註冊設定。');}
 const auth=getAuth(app),provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await setPersistence(auth,browserLocalPersistence);try{await getRedirectResult(auth)}catch(error){showAuthError('登入未完成：'+(error.code||'請稍後再試'))}
 let activeUid;

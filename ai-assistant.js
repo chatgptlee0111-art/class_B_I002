@@ -265,7 +265,11 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
     } catch (error) {
       pending.remove();
       const detail = `${error?.code || ''} ${error?.message || ''}`;
-      if (/app.?check|403|PERMISSION_DENIED|firebasevertexai|terms/i.test(detail)) {
+      if (/429|RESOURCE_EXHAUSTED|quota|rate.?limit/i.test(detail)) {
+        appendMessage('model', 'Gemini 目前使用量已達限制，請稍後再試。你仍可使用行程查詢與新增、修改草稿。');
+      } else if (/500|503|high demand|overloaded|unavailable|Timeout|timed out|abort/i.test(detail)) {
+        appendMessage('model', 'Gemini 目前忙碌或回覆逾時，請稍後重新送出問題。行程資料不受影響。');
+      } else if (/app.?check|403|PERMISSION_DENIED|terms/i.test(detail)) {
         appendMessage('model', 'Gemini 尚未完成 Firebase AI Logic／App Check 設定。請確認已接受 Google Generative Language API 服務條款、啟用 AI Logic，並為這個 Web App 完成 reCAPTCHA Enterprise App Check 註冊。');
       } else {
         appendMessage('model', `Gemini 暫時無法回覆（${error?.code || '連線失敗'}）。請稍後再試。`);
