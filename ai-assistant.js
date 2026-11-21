@@ -17,6 +17,7 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   const storageKey = `shiguang-ai-chat-v1-${userId}`;
   let history = [];
   let busy = false;
+  let backgroundScroll = null;
   const actionEditor = initializeActionEditor({ getData, save, render, toast, appendMessage, messages });
   try {
     const saved = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -73,17 +74,29 @@ export function initializeScheduleAssistant({ userId, getData, model, aiSetupErr
   restoreHistory();
 
   function openPanel() {
+    if (backgroundScroll) return;
+    backgroundScroll = { left: window.scrollX, top: window.scrollY };
+    document.body.style.setProperty('--assistant-page-top', `${-backgroundScroll.top}px`);
+    document.body.style.setProperty('--assistant-page-left', `${-backgroundScroll.left}px`);
+    document.documentElement.classList.add('assistant-open');
     panel.hidden = false;
     document.body.classList.add('assistant-open');
     launcher.setAttribute('aria-expanded', 'true');
-    input.focus();
+    input.focus({ preventScroll: true });
   }
 
   function closePanel() {
     panel.hidden = true;
     document.body.classList.remove('assistant-open');
+    document.documentElement.classList.remove('assistant-open');
+    document.body.style.removeProperty('--assistant-page-top');
+    document.body.style.removeProperty('--assistant-page-left');
+    if (backgroundScroll) {
+      window.scrollTo({ ...backgroundScroll, behavior: 'instant' });
+      backgroundScroll = null;
+    }
     launcher.setAttribute('aria-expanded', 'false');
-    launcher.focus();
+    launcher.focus({ preventScroll: true });
   }
 
   launcher.addEventListener('click', () => panel.hidden ? openPanel() : closePanel());

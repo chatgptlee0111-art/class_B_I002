@@ -70,6 +70,12 @@ html:has(dialog[open]){overflow:hidden}.toast{max-width:calc(100vw - 32px);overf
 .ai-suggestions{flex-wrap:nowrap;overflow-x:auto;max-width:100%;padding-top:8px}.ai-suggestions button{flex-shrink:0;white-space:nowrap;min-height:40px}
 .ai-form textarea{min-width:0;resize:none;max-height:90px}.ai-form .ai-send{min-width:42px}
 .ai-launcher[aria-expanded=true]{visibility:hidden}
+/* A fixed body also locks iOS Safari; overflow alone can still move the page. */
+html.assistant-open{overflow:hidden;overscroll-behavior:none}
+body.assistant-open{position:fixed;top:var(--assistant-page-top,0px);left:var(--assistant-page-left,0px);width:100%;overflow:hidden;overscroll-behavior:none}
+body.assistant-open::after{content:'';position:fixed;inset:0;z-index:68;touch-action:none}
+.ai-panel{overscroll-behavior:contain}
+.ai-messages,.ai-delete-list,.ai-privacy,.ai-suggestions{overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .ai-action-card{width:100%;max-width:100%}.ai-action-card select{max-width:100%}
 @media(max-width:760px){
  .mobile-nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:0;overflow:visible;padding-left:max(4px,env(safe-area-inset-left));padding-right:max(4px,env(safe-area-inset-right));padding-bottom:calc(8px + env(safe-area-inset-bottom))}
@@ -85,7 +91,6 @@ html:has(dialog[open]){overflow:hidden}.toast{max-width:calc(100vw - 32px);overf
  .ai-privacy{margin:6px 10px 0;padding:7px 10px}.ai-privacy[open]{max-height:22vh;overflow:auto}.ai-messages{padding:12px 10px}.ai-bubble{max-width:94%;font-size:16px}
  .ai-suggestions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;overflow:visible}.ai-suggestions button{min-width:0;white-space:normal;padding:7px 6px}
  .ai-foot{font-size:12px;padding-bottom:calc(8px + env(safe-area-inset-bottom))}.toast{bottom:calc(90px + env(safe-area-inset-bottom))}
- body.assistant-open{overflow:hidden}
 }
 @media(max-width:600px){
  dialog{width:calc(100% - 24px);border-radius:16px}.modal-head{padding:16px}.modal-head h2{font-size:21px}.form{grid-template-columns:minmax(0,1fr);padding:16px;gap:16px}.field.full{grid-column:1}.field label{font-size:16px}
