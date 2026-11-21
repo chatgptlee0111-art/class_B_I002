@@ -18,25 +18,111 @@
 
 .content-grid>.panel,.content-grid>.right-col,.week-labels,.week-grid,.daycol{min-width:0}.week-labels,.week-grid{width:100%;grid-template-columns:repeat(7,minmax(0,1fr))}#calendarArea{min-width:0;max-width:100%}.month-event b{min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@media(max-width:1250px){.content-grid{grid-template-columns:minmax(0,1fr)}.right-col{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.coverage-panel{grid-column:1/-1}}@media(max-width:760px){.right-col{grid-template-columns:1fr}.coverage-panel{grid-column:auto}}
 
+.line-signin{margin-top:10px;background:#087e3e;color:white;border-color:#087e3e}.line-signin:hover{background:#066a34}.line-signin:disabled{opacity:.6}.app[hidden]{display:none}
 </style>
+<style>
+/* Improve readability in the calendar and add the schedule assistant. */
+.event{font-size:11px;line-height:1.45;padding:6px 7px}
+.event b{font-size:12px}
+.event small{display:block;font-size:10px;line-height:1.4;margin-top:2px}
+.month-event{padding:4px 5px}
+.month-event b{font-size:10px}
+.month-event small{font-size:9px}
+.dayhead{font-size:11px}
+.tt-head,.tt-time{font-size:11px}
+.tt-lesson{font-size:11px;line-height:1.45;padding:6px}
+.tt-lesson b{font-size:11px}
+.tt-lesson small{font-size:10px;line-height:1.4}
+.timeline-row{min-height:76px}
+.time-label{font-size:11px}
+.timeline-card{padding:12px 14px}
+.timeline-card b{font-size:14px}
+.timeline-card small{font-size:12px;line-height:1.5}
+.coverage-intro,.coverage-period{font-size:12px;line-height:1.55}
+.coverage-name{font-size:14px}
+.coverage-meta{font-size:11px}
+.ai-launcher[hidden],.ai-panel[hidden]{display:none!important}
+.ai-launcher{position:fixed;z-index:70;right:26px;bottom:24px;display:flex;align-items:center;gap:10px;border:0;border-radius:999px;padding:12px 18px;background:#39785a;color:#fff;box-shadow:0 8px 28px #203c2b36;font-weight:700;font-size:14px}
+.ai-launcher:hover{background:#2f654b;transform:translateY(-1px)}
+.ai-launcher-icon{display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#ffffff26;font-size:16px}
+.ai-panel{position:fixed;z-index:69;right:26px;bottom:88px;width:min(410px,calc(100vw - 32px));height:min(690px,calc(100dvh - 116px));display:grid;grid-template-rows:auto auto minmax(0,1fr) auto auto auto;overflow:hidden;border:1px solid #e5ebe5;border-radius:20px;background:#fff;box-shadow:0 18px 60px #203c2b2b}
+.ai-header{display:flex;align-items:center;gap:11px;padding:15px 16px;border-bottom:1px solid #edf0ed;background:#f8fbf8}
+.ai-mark{flex:0 0 38px;height:38px;display:grid;place-items:center;border-radius:50%;background:#e3f0e6;color:#39785a;font-size:18px}
+.ai-heading{flex:1;min-width:0}.ai-heading h2{margin:0;font-size:16px}.ai-heading p{margin:2px 0 0;color:#718078;font-size:12px;line-height:1.35}
+.ai-header-actions{display:flex;align-items:center;gap:4px}.ai-header-actions button{border:0;background:transparent;color:#66746b;border-radius:8px;padding:7px;font-size:12px}.ai-header-actions button:hover{background:#eaf1eb}.ai-close{font-size:20px!important;line-height:1}
+.ai-privacy{margin:10px 13px 0;padding:9px 11px;border-radius:10px;background:#f4f6f4;color:#5c6d62;font-size:11px;line-height:1.5}
+.ai-messages{display:flex;flex-direction:column;gap:10px;overflow-y:auto;padding:14px 13px;overscroll-behavior:contain}
+.ai-bubble{max-width:88%;padding:10px 12px;border-radius:14px;font-size:14px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.ai-bubble.model{align-self:flex-start;background:#f0f5f1;color:#31483a;border-top-left-radius:5px}
+.ai-bubble.user{align-self:flex-end;background:#39785a;color:#fff;border-top-right-radius:5px}
+.ai-bubble.pending{color:#66746b;font-style:italic}
+.ai-suggestions{display:flex;flex-wrap:wrap;gap:6px;padding:0 12px 10px}
+.ai-suggestions button{border:1px solid #e2e9e3;border-radius:999px;background:#fff;color:#536a5a;padding:7px 10px;font-size:12px;line-height:1.25}
+.ai-suggestions button:hover{background:#f1f6f2}
+.ai-form{display:grid;grid-template-columns:minmax(0,1fr) 42px;align-items:end;gap:8px;padding:10px 12px 12px;border-top:1px solid #edf0ed}
+.ai-form textarea{resize:vertical;min-height:42px;max-height:120px;border:1px solid #cddbd0;border-radius:12px;padding:10px 11px;font-size:14px;line-height:1.45;outline:none}
+.ai-form textarea:focus{border-color:#4b8967;box-shadow:0 0 0 3px #dcebe0}
+.ai-send{height:42px;border:0;border-radius:12px;background:#39785a;color:white;font-size:21px;font-weight:700}
+.ai-send:disabled{opacity:.55;cursor:wait}
+.ai-foot{padding:0 13px 10px;text-align:center;color:#849089;font-size:11px;line-height:1.4}
+@media(max-width:760px){
+ .ai-launcher{right:14px;bottom:78px;padding:10px 14px}
+ .ai-panel{right:10px;bottom:138px;width:calc(100vw - 20px);height:min(620px,calc(100dvh - 158px));border-radius:17px}
+ .daycol{min-height:180px}
+ .event{font-size:10px;padding:5px}
+ .event b{font-size:11px}
+ .event small{font-size:9px}
+ .month-event b{font-size:9px}
+ .month-event small{font-size:8px}
+}
+</style>
+<link rel="stylesheet" href="./workspace.css">
 </head>
 <body>
 <div id="authLoading" class="auth-loading">正在確認登入狀態…</div>
-<section id="authGate" class="auth-shell" hidden aria-labelledby="authTitle"><div class="auth-card"><div class="auth-brand"><div class="brand-mark">✳</div><div class="brand-name">拾光</div></div><h1 id="authTitle">登入你的學習空間</h1><p class="auth-lead">請使用 Google 帳戶登入，才能查看課表、行事曆與課業任務。</p><button id="googleSignIn" class="google-signin" type="button"><span class="google-mark" aria-hidden="true">G</span>使用 Google 帳戶繼續</button><div id="authStatus" class="auth-status" role="status" aria-live="polite"></div><div id="authError" class="auth-error" role="alert" aria-live="assertive"></div><div class="auth-foot">登入狀態由 Firebase Authentication 管理。請勿在公用裝置保持登入。</div></div></section>
+<section id="authGate" class="auth-shell" hidden aria-labelledby="authTitle"><div class="auth-card"><div class="auth-brand"><div class="brand-mark">✳</div><div class="brand-name">拾光</div></div><h1 id="authTitle">登入你的學習空間</h1><p class="auth-lead">請使用 Google 或 LINE 帳戶登入，才能查看課表、行事曆與課業任務。</p><button id="googleSignIn" class="google-signin" type="button"><span class="google-mark" aria-hidden="true">G</span>使用 Google 帳戶繼續</button><button id="lineSignIn" class="google-signin line-signin" type="button" disabled>使用 LINE 帳戶繼續</button><div id="authStatus" class="auth-status" role="status" aria-live="polite"></div><div id="authError" class="auth-error" role="alert" aria-live="assertive"></div><div class="auth-foot">登入狀態由 Firebase Authentication 管理。請勿在公用裝置保持登入。</div></div></section>
 <div class="app" id="plannerApp" hidden>
-<aside><div class="brand"><div class="brand-mark">✳</div><div><div class="brand-name">拾光</div><div class="brand-sub">把每一步，安排得剛剛好</div></div></div><div><div class="side-label">工作空間</div><nav class="nav"><button class="active" data-view="dashboard"><span class="icon">▦</span>總覽</button><button data-view="schedule"><span class="icon">◷</span>行事曆</button><button data-view="timetable"><span class="icon">▤</span>固定課表</button><button data-view="tasks"><span class="icon">☷</span>課業任務<span id="sideTaskCount" class="count">0</span></button><button id="navNotice"><span class="icon">♧</span>提醒通知<span class="count" id="sideNoticeCount">0</span></button></nav></div><div><div class="side-label">我的科目・實際時程</div><div class="subjects" id="subjects"></div></div><div class="aside-bottom"><b>✦ 一點小提醒</b>一次專注一件事，進度會比想像中快。</div></aside>
-<main class="main"><div class="topline"><div><div class="eyebrow">STUDENT PLANNER</div><div class="top-title">學習空間　/　總覽</div></div><div class="top-actions"><div id="accountChip" class="account-chip" hidden><span id="accountAvatar" class="account-avatar"></span><span id="accountEmail" class="account-email"></span></div><button class="signout-btn" id="signOutBtn" type="button" hidden>登出</button><button class="iconbtn" id="notifyBtn" aria-label="開啟通知" title="開啟瀏覽器通知">♧<span class="notif-dot"></span></button><div class="avatar">同</div></div></div>
-<div class="welcome"><div><div class="eyebrow" id="fullDate"></div><h1 id="greeting">早安，今天也加油 ☀</h1><p>把待辦一件件完成，讓學習更有節奏。</p></div><div class="date-controls"><button id="prevDate" aria-label="上一週">‹</button><div class="date-read" id="periodLabel"></div><button id="nextDate" aria-label="下一週">›</button><button class="today-btn" id="goToday">今天</button></div></div>
-<div class="quick-stats"><div class="stat"><div class="stat-icon">☷</div><div><div class="stat-num" id="statTasks">0</div><div class="stat-label">待完成任務</div></div></div><div class="stat"><div class="stat-icon">◷</div><div><div class="stat-num" id="statEvents">0</div><div class="stat-label">本週行程</div></div></div><div class="stat"><div class="stat-icon">✧</div><div><div class="stat-num" id="statProgress">0%</div><div class="stat-label">課業完成率</div></div></div></div>
-<div class="content-grid"><section class="panel"><div class="panel-head"><div><div class="panel-title">學習行事曆</div><div class="panel-sub" id="calendarSub">安排你的每一天</div></div><div class="switch"><button id="dayViewBtn">每日</button><button id="weekViewBtn" class="active">每週</button><button id="monthViewBtn">每月</button></div></div><div id="calendarArea"></div></section>
-<div class="right-col"><section class="panel coverage-panel"><div class="panel-head"><div><div class="panel-title">各科實際涵蓋時程</div><div class="panel-sub">依已排定的課表與課業任務整理</div></div><button class="tiny-btn" id="editCoverage">編輯日期</button></div><div id="subjectCoverage" class="subject-coverage"></div></section><section class="panel task-panel"><div class="panel-head"><div><div class="panel-title">課業任務</div><div class="panel-sub">小步前進，也是在前進</div></div><div class="head-add"><button class="add-btn" id="addTaskBtn">＋ 新增</button></div></div><div class="task-list" id="taskList"></div></section><section class="panel deadline-panel"><div class="panel-head"><div><div class="panel-title">近期截止</div><div class="panel-sub">記得留一點時間給自己</div></div><button class="tiny-btn" id="addEventQuick">＋ 行程</button></div><div class="deadlines" id="deadlines"></div></section></div></div></main></div>
-<nav class="mobile-nav"><button class="active" data-view="dashboard"><span>▦</span>總覽</button><button data-view="schedule"><span>◷</span>行事曆</button><button data-view="timetable"><span>▤</span>課表</button><button data-view="tasks"><span>☷</span>任務</button><button id="mobileAdd"><span>＋</span>新增</button></nav>
+<aside><div class="brand"><div class="brand-mark">✳</div><div><div class="brand-name">拾光</div><div class="brand-sub">把每一步，安排得剛剛好</div></div></div><div><div class="side-label">工作空間</div><nav class="nav"><button class="active" data-view="schedule"><span class="icon">◷</span>行事曆</button><button data-view="timetable"><span class="icon">▤</span>固定課表</button><button data-view="tasks"><span class="icon">☷</span>課業任務<span id="sideTaskCount" class="count">0</span></button><button id="navNotice" data-view="reminders"><span class="icon">♧</span>提醒通知<span class="count" id="sideNoticeCount">0</span></button><button data-view="coverage"><span class="icon">◈</span>科目時程</button></nav></div><div><div class="side-label">我的科目・實際時程</div><div class="subjects" id="subjects"></div></div><div class="aside-bottom"><b>✦ 一點小提醒</b>一次專注一件事，進度會比想像中快。</div></aside>
+<main class="main"><div class="topline"><div><div class="eyebrow">STUDENT PLANNER</div><div class="top-title">學習空間　/　行事曆</div></div><div class="top-actions"><span id="cloudStatus" role="status" aria-live="polite"></span><button id="retrySave" type="button" class="secondary-btn" hidden>重試儲存</button><div id="accountChip" class="account-chip" hidden><span id="accountAvatar" class="account-avatar"></span><span id="accountEmail" class="account-email"></span></div><button class="signout-btn" id="signOutBtn" type="button" hidden>登出</button><button class="iconbtn" id="notifyBtn" aria-label="開啟通知" title="開啟瀏覽器通知">♧<span class="notif-dot"></span></button><div class="avatar">同</div></div></div>
+<div class="welcome"><div><div class="eyebrow" id="fullDate"></div><h1 id="greeting" tabindex="-1">行事曆</h1><p id="pageDescription">依日期查看任務、行程與考試。</p></div><div class="date-controls"><button id="prevDate" aria-label="上一週">‹</button><div class="date-read" id="periodLabel"></div><button id="nextDate" aria-label="下一週">›</button><button class="today-btn" id="goToday">今天</button></div></div>
+
+<div class="content-grid">
+<section class="panel workspace-page" id="calendarPage" aria-labelledby="calendarTitle">
+  <div class="panel-head"><div><div class="panel-title" id="calendarTitle">學習行事曆</div><div class="panel-sub" id="calendarSub">安排你的每一天</div></div><div class="switch"><button id="dayViewBtn">每日</button><button id="weekViewBtn" class="active">每週</button><button id="monthViewBtn">每月</button></div><button id="addEventQuick" class="add-btn">＋ 新增行程</button><button id="addSlotBtn" class="add-btn" hidden>＋ 新增課程</button></div>
+  <div id="timetableZoom" class="zoom-toolbar" hidden><div class="zoom-controls" role="group" aria-label="固定課表縮放"><button id="zoomOut" class="secondary-btn" aria-label="縮小課表">−</button><output id="zoomLevel" aria-live="polite">100%</output><button id="zoomIn" class="secondary-btn" aria-label="放大課表">＋</button><button id="zoomReset" class="secondary-btn">重設</button></div><p class="zoom-hint">僅縮放課表；可上下左右捲動，也可按住 Ctrl／⌘ 滾輪縮放。</p></div>
+  <div id="calendarArea"></div>
+</section>
+<section class="panel task-panel workspace-page" id="tasksPage" aria-labelledby="tasksTitle" hidden>
+  <div class="panel-head"><div><div class="panel-title" id="tasksTitle">課業任務</div><div class="panel-sub" id="taskSummary"></div></div><button class="add-btn" id="addTaskBtn">＋ 新增任務</button></div>
+  <div class="task-filters" role="group" aria-label="任務狀態"><button class="secondary-btn" data-task-filter="all" aria-pressed="true">全部</button><button class="secondary-btn" data-task-filter="pending" aria-pressed="false">待完成</button><button class="secondary-btn" data-task-filter="done" aria-pressed="false">已完成</button></div><div class="task-list" id="taskList"></div>
+</section>
+<section class="panel deadline-panel workspace-page" id="remindersPage" aria-labelledby="remindersTitle" hidden>
+  <div class="panel-head"><div><div class="panel-title" id="remindersTitle">提醒通知</div><div class="panel-sub">檢視自訂提醒時間與近期截止事項</div></div><button id="enableNotifications" class="secondary-btn">開啟瀏覽器通知</button></div><div id="reminderStatus" class="reminder-status"></div><div class="deadlines" id="reminderList"></div><div class="panel-head"><div class="panel-title">近期截止</div></div><div class="deadlines" id="deadlines"></div>
+</section>
+<section class="panel coverage-panel workspace-page" id="coveragePage" aria-labelledby="coverageTitle" hidden>
+  <div class="panel-head"><div><div class="panel-title" id="coverageTitle">各科實際涵蓋時程</div><div class="panel-sub">檢視各科明確設定的日期範圍</div></div><button class="secondary-btn" id="editCoverage">編輯日期</button></div><div id="subjectCoverage" class="subject-coverage"></div>
+</section>
+</div></main></div>
+<nav class="mobile-nav" aria-label="工作空間"><button class="active" data-view="schedule"><span>◷</span>行事曆</button><button data-view="timetable"><span>▤</span>課表</button><button data-view="tasks"><span>☷</span>任務</button><button data-view="reminders"><span>♧</span>提醒</button><button data-view="coverage"><span>◈</span>科目</button><button id="mobileAdd"><span>＋</span>新增</button></nav>
 <dialog id="itemDialog"><div class="modal-head"><h2 id="dialogTitle">新增課業任務</h2><button class="close" id="closeDialog" aria-label="關閉">×</button></div><form id="itemForm" class="form"><input type="hidden" id="itemId"><div class="field"><label for="kind">項目類型</label><select id="kind"><option value="task">課業任務</option><option value="event">行程／考試</option></select></div><div class="field"><label for="subject">科目</label><select id="subject"><option>工程圖學</option><option>普通物理</option><option>微積分</option><option>工程力學</option><option>材料科學導論</option><option>機械製造概論</option><option>計算機程式設計</option><option>工程數學</option></select></div><div class="field full"><label for="title">名稱</label><input id="title" required maxlength="70" placeholder="例如：完成第三課練習題"></div><div class="field"><label for="date">日期</label><input id="date" type="date" required></div><div class="field"><label for="time">時間</label><input id="time" type="time" value="15:00"></div><div class="field full" id="subtasksField"><label>子任務清單（自動計算完成百分比）</label><div id="subtaskInputs" class="subtask-list"></div><button type="button" class="add-sub" id="addSubtask">＋ 新增子任務</button></div><div class="field full"><label for="notes">備註</label><textarea id="notes" maxlength="500" placeholder="補充教材、頁數或其他提醒⋯"></textarea></div><div class="field"><label for="remindAt">自訂提醒時間</label><input id="remindAt" type="datetime-local"></div><div class="field"><label class="reminder-toggle"><input id="reminderEnabled" type="checkbox" checked>加入站內提醒</label><div class="small-note">瀏覽器通知需另外授權</div></div><div class="modal-actions"><button type="button" id="deleteItem" class="danger-btn">刪除項目</button><div class="right-actions"><button type="button" class="secondary-btn" id="cancelDialog">取消</button><button type="submit" class="add-btn">儲存</button></div></div></form></dialog>
 <dialog id="timetableDialog"><div class="modal-head"><h2 id="timetableDialogTitle">新增固定課程</h2><button class="close" id="closeTimetableDialog" aria-label="關閉">×</button></div><form id="timetableForm" class="form"><input type="hidden" id="slotId"><div class="field"><label for="slotDay">星期</label><select id="slotDay"><option value="1">星期一</option><option value="2">星期二</option><option value="3">星期三</option><option value="4">星期四</option><option value="5">星期五</option><option value="6">星期六</option><option value="0">星期日</option></select></div><div class="field"><label for="slotSubject">科目</label><select id="slotSubject"><option>工程圖學</option><option>普通物理</option><option>微積分</option><option>工程力學</option><option>材料科學導論</option><option>機械製造概論</option><option>計算機程式設計</option><option>工程數學</option></select></div><div class="field full"><label for="slotTitle">課程名稱</label><input id="slotTitle" required maxlength="70" placeholder="例如：數學（二）"></div><div class="field"><label for="slotStart">開始時間</label><input id="slotStart" type="time" value="08:00" required></div><div class="field"><label for="slotEnd">結束時間</label><input id="slotEnd" type="time" value="08:50" required></div><div class="field full"><label for="slotPlace">教室／地點</label><input id="slotPlace" maxlength="60" placeholder="例如：教室 302"></div><div class="field"><label for="slotCoverageStart">科目涵蓋開始日</label><input id="slotCoverageStart" type="date"></div><div class="field"><label for="slotCoverageEnd">科目涵蓋結束日</label><input id="slotCoverageEnd" type="date"></div><div class="field full"><label for="slotNotes">備註</label><textarea id="slotNotes" maxlength="300" placeholder="授課老師、教材或提醒⋯"></textarea></div><div class="modal-actions"><button type="button" id="deleteSlot" class="danger-btn">刪除課程</button><div class="right-actions"><button type="button" class="secondary-btn" id="cancelSlot">取消</button><button type="submit" class="add-btn">儲存課程</button></div></div></form></dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
+<button id="aiLauncher" class="ai-launcher" type="button" aria-controls="aiPanel" aria-expanded="false" hidden><span class="ai-launcher-icon" aria-hidden="true">✦</span><span>AI 行程助理</span></button>
+<section id="aiPanel" class="ai-panel" role="dialog" aria-labelledby="aiTitle" aria-modal="false" hidden>
+  <header class="ai-header"><div class="ai-mark" aria-hidden="true">✦</div><div class="ai-heading"><h2 id="aiTitle">AI 行程助理</h2><p id="aiStatus" role="status" aria-live="polite">依照你的行程回答問題</p></div><div class="ai-header-actions"><button id="aiClear" type="button" title="清除本機對話">清除對話</button><button id="aiClose" class="ai-close" type="button" aria-label="關閉助理">×</button></div></header>
+  <p class="ai-privacy">對話只保存在這台瀏覽器。使用 Gemini 時，問題及必要的行程名稱、科目、日期與時間會傳送給 Google；不會傳送備註。</p>
+  <div id="aiMessages" class="ai-messages" role="log" aria-live="polite" aria-relevant="additions text"></div>
+  <div class="ai-suggestions" aria-label="建議問題"><button type="button" data-ai-prompt="今天有哪些行程？">今天有哪些行程？</button><button type="button" data-ai-prompt="下週哪一天比較空？">比較下週空檔</button><button type="button" data-ai-prompt="幫我刪除所有行程">刪除所有行程</button></div>
+  <form id="aiForm" class="ai-form"><textarea id="aiInput" rows="1" maxlength="500" aria-label="輸入行程問題" placeholder="問問你的行程…"></textarea><button id="aiSend" class="ai-send" type="submit" aria-label="送出訊息">↑</button></form>
+  <div class="ai-foot">刪除行程前會再次確認；課業任務與固定課表不會被刪除。</div>
+</section>
 <script type="module">
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from 'https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js';
+import { getFirestore, doc, getDocFromServer, runTransaction } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js';
+import { getAuth, GoogleAuthProvider, OAuthProvider, signInWithPopup, signInWithRedirect, getRedirectResult, onAuthStateChanged, setPersistence, browserLocalPersistence, signOut } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js';
+import { initializeAppCheck, ReCaptchaEnterpriseProvider } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-app-check.js';
+import { getAI, getGenerativeModel, GoogleAIBackend } from 'https://www.gstatic.com/firebasejs/13.4.0/firebase-ai.js';
+import { initializeScheduleAssistant } from './ai-assistant.js';
 // Firebase Web app config from Firebase Console > Project settings > Your apps.
 window.SHIGUANG_FIREBASE_CONFIG = {
   apiKey: "AIzaSyD_CICR5JCU63pP8iV6mcUkexYMK3OD540",
@@ -44,21 +130,181 @@ window.SHIGUANG_FIREBASE_CONFIG = {
   projectId: "i002-1030",
   appId: "1:83986907997:web:0ebc614f1f74d50204deb4"
 };
+// Firebase Console > App Check > register the Web app with reCAPTCHA Enterprise.
+// This is a public site key, not a secret. Keep it empty until the provider is registered.
+window.SHIGUANG_RECAPTCHA_ENTERPRISE_SITE_KEY = '';
+// Set true after `firebase init ailogic` succeeds for the Web app.
+window.SHIGUANG_AI_LOGIC_PROVISIONED = false;
 const firebaseConfig = window.SHIGUANG_FIREBASE_CONFIG;
 const authGate=document.getElementById('authGate'),authLoading=document.getElementById('authLoading'),plannerApp=document.getElementById('plannerApp'),authError=document.getElementById('authError'),authStatus=document.getElementById('authStatus'),googleSignIn=document.getElementById('googleSignIn'),signOutBtn=document.getElementById('signOutBtn'),accountChip=document.getElementById('accountChip'),accountEmail=document.getElementById('accountEmail'),accountAvatar=document.getElementById('accountAvatar');
 function showAuthError(message){authError.textContent=message;authStatus.textContent=''}
 function setAuthenticated(user){authLoading.hidden=true;authGate.hidden=!!user;plannerApp.hidden=!user;signOutBtn.hidden=!user;accountChip.hidden=!user;if(user){accountEmail.textContent=user.displayName||user.email||'已登入';accountAvatar.replaceChildren();if(user.photoURL){const image=document.createElement('img');image.src=user.photoURL;image.alt='';accountAvatar.append(image)}else accountAvatar.textContent=(user.displayName||user.email||'同').slice(0,1);}}
 if(!firebaseConfig||!firebaseConfig.apiKey||!firebaseConfig.authDomain||!firebaseConfig.projectId||!firebaseConfig.appId){authLoading.hidden=true;authGate.hidden=false;plannerApp.hidden=true;googleSignIn.disabled=true;googleSignIn.setAttribute('aria-disabled','true');showAuthError('Firebase 尚未設定。請先依 README 的設定教學完成 Firebase 設定。')}
-else{try{const app=initializeApp(firebaseConfig),auth=getAuth(app),provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await setPersistence(auth,browserLocalPersistence);try{await getRedirectResult(auth)}catch(error){showAuthError('登入未完成：'+(error.code||'請稍後再試'))}onAuthStateChanged(auth,user=>{if(!user){document.getElementById('plannerApp').hidden=true;localStorage.removeItem('shiguang-planner-v1')}setAuthenticated(user)},error=>{document.getElementById('plannerApp').hidden=true;setAuthenticated(null);showAuthError('無法驗證登入狀態：'+(error.code||'請稍後重新載入'))});googleSignIn.addEventListener('click',async()=>{googleSignIn.disabled=true;authError.textContent='';authStatus.textContent='正在連線 Google…';try{await signInWithPopup(auth,provider)}catch(error){if(error.code==='auth/popup-blocked'||error.code==='auth/popup-closed-by-user'||error.code==='auth/cancelled-popup-request'){try{await signInWithRedirect(auth,provider);return}catch(redirectError){error=redirectError}}showAuthError('Google 登入失敗：'+(error.code||'請檢查網路與 Firebase 設定'));googleSignIn.disabled=false}});signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;try{await signOut(auth)}catch(error){showAuthError('登出失敗：'+(error.code||'請重新載入頁面'))}finally{signOutBtn.disabled=false}})}catch(error){authLoading.hidden=true;authGate.hidden=false;plannerApp.hidden=true;googleSignIn.disabled=true;showAuthError('Firebase 初始化失敗：'+(error.code||error.message||'請檢查 Firebase 設定'))}}
+else{try{
+const app=initializeApp(firebaseConfig);
+let aiModel=null,aiSetupError='';
+const recaptchaSiteKey=String(window.SHIGUANG_RECAPTCHA_ENTERPRISE_SITE_KEY||'').trim();
+if(!window.SHIGUANG_AI_LOGIC_PROVISIONED)aiSetupError='Firebase AI Logic 尚未完成啟用；請先接受 Google Generative Language API 服務條款並完成 Firebase 初始化。';
+else if(!recaptchaSiteKey)aiSetupError='尚未設定 reCAPTCHA Enterprise App Check site key。';
+else try{
+  initializeAppCheck(app,{provider:new ReCaptchaEnterpriseProvider(recaptchaSiteKey),isTokenAutoRefreshEnabled:true});
+  const ai=getAI(app,{backend:new GoogleAIBackend(),useLimitedUseAppCheckTokens:true});
+  aiModel=getGenerativeModel(ai,{model:'gemini-3.8-flash',systemInstruction:'你是拾光課業行程助理。以繁體中文簡潔回答，僅依照使用者訊息附上的行程資料作答；不得捏造行程、日期或空檔。遇到不完整資料時要明確說明。不要執行或聲稱執行任何資料修改。',generationConfig:{temperature:0.3,maxOutputTokens:900}});
+}catch(error){aiSetupError='App Check 初始化失敗：'+(error.code||error.message||'請確認 site key 與 Firebase App Check 註冊設定。');}
+const auth=getAuth(app),provider=new GoogleAuthProvider();provider.setCustomParameters({prompt:'select_account'});await setPersistence(auth,browserLocalPersistence);try{await getRedirectResult(auth)}catch(error){showAuthError('登入未完成：'+(error.code||'請稍後再試'))}
+let activeUid;
+onAuthStateChanged(auth, async user => {
+  if (activeUid && user?.uid !== activeUid) {
+    plannerApp.hidden = true;
+    location.reload();
+    return;
+  }
+  if (!user) { setAuthenticated(null); return; }
+  if (activeUid === user.uid) return;
+  activeUid = user.uid;
+  authGate.hidden = true;
+  authLoading.hidden = false;
+  authLoading.textContent = '正在讀取你的雲端課表…';
+  try {
+    const ref = doc(getFirestore(app), 'planners', user.uid);
+    await window.startPlanner({auth, user, ref, getDocFromServer, runTransaction, db: getFirestore(app), aiModel, aiSetupError, initializeScheduleAssistant});
+    if (auth.currentUser?.uid === user.uid) setAuthenticated(user);
+  } catch (error) {
+    if (auth.currentUser?.uid !== user.uid) return;
+    authLoading.hidden = true;
+    authGate.hidden = false;
+    showAuthError('雲端課表無法載入（' + (error.code || '資料讀取失敗') + '）。請重新整理再試。');
+    const retry = document.createElement('button');
+    retry.className = 'secondary-btn';
+    retry.textContent = '重新載入';
+    retry.onclick = () => location.reload();
+    authError.append(' ', retry);
+    googleSignIn.hidden = lineSignIn.hidden = true;
+  }
+},error=>{document.getElementById('plannerApp').hidden=true;setAuthenticated(null);showAuthError('無法驗證登入狀態：'+(error.code||'請稍後重新載入'))});
+const lineSignIn = document.getElementById('lineSignIn');
+const lineProvider = new OAuthProvider('oidc.line');
+lineProvider.addScope('openid');
+lineProvider.addScope('profile');
+lineSignIn.disabled = false;
+
+async function startSignIn(selectedProvider, name) {
+  googleSignIn.disabled = lineSignIn.disabled = true;
+  authError.textContent = '';
+  authStatus.textContent = '正在連線 ' + name + '…';
+  try {
+    await signInWithPopup(auth, selectedProvider);
+  } catch (error) {
+    if (error.code === 'auth/popup-blocked' && name === 'Google') {
+      try {
+        await signInWithRedirect(auth, selectedProvider);
+        return;
+      } catch (redirectError) {
+        error = redirectError;
+      }
+    }
+    if (error.code === 'auth/popup-blocked') {
+      showAuthError('請允許登入彈出視窗，再按一次登入。');
+    } else if (name === 'LINE' && ['auth/operation-not-allowed', 'auth/invalid-provider-id', 'auth/configuration-not-found'].includes(error.code)) {
+      showAuthError('LINE 登入尚未啟用，請先使用 Google 登入。');
+    } else if (!['auth/popup-closed-by-user','auth/cancelled-popup-request'].includes(error.code)) {
+      showAuthError(name + ' 登入失敗：' + (error.code || '請稍後再試'));
+    }
+  } finally {
+    authStatus.textContent = '';
+    googleSignIn.disabled = lineSignIn.disabled = false;
+  }
+}
+googleSignIn.addEventListener('click', () => startSignIn(provider, 'Google'));
+lineSignIn.addEventListener('click', () => startSignIn(lineProvider, 'LINE'));
+signOutBtn.addEventListener('click',async()=>{signOutBtn.disabled=true;try{await signOut(auth)}catch(error){showAuthError('登出失敗：'+(error.code||'請重新載入頁面'))}finally{signOutBtn.disabled=false}})}catch(error){authLoading.hidden=true;authGate.hidden=false;plannerApp.hidden=true;googleSignIn.disabled=true;showAuthError('Firebase 初始化失敗：'+(error.code||error.message||'請檢查 Firebase 設定'))}}
 </script>
 <script>
-(()=>{'use strict';
+'use strict';
+window.startPlanner = async function({auth, user, ref, db, getDocFromServer, runTransaction, aiModel, aiSetupError, initializeScheduleAssistant}){
 const STORAGE='shiguang-planner-v1',subjects=['工程圖學','普通物理','微積分','工程力學','材料科學導論','機械製造概論','計算機程式設計','工程數學'],colors={'工程圖學':['#e1e7f4','#64759a'],'普通物理':['#e6e1f1','#7b6997'],'微積分':['#f5e5d7','#a9764e'],'工程力學':['#d7e6d7','#52765e'],'材料科學導論':['#f3e4e2','#a76c65'],'機械製造概論':['#e7eee2','#64805b'],'計算機程式設計':['#e5e9ec','#62727c'],'工程數學':['#f0e7d8','#987949']};
 for(const subject of subjects)if(!colors[subject])colors[subject]=['#e8eee8','#657d6b'];
 const today=new Date();today.setHours(0,0,0,0);const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;const shift=(d,n)=>{let x=new Date(d);x.setDate(x.getDate()+n);return x};const parseDate=s=>new Date(`${s}T00:00:00`);const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));const uid=()=>crypto.randomUUID?crypto.randomUUID():`${Date.now()}-${Math.random()}`;
-document.getElementById('plannerApp').hidden=false;
-let data;try{data=JSON.parse(localStorage.getItem(STORAGE)||'null')}catch{}if(!data||!Array.isArray(data.items)){let d=iso(today);data={items:[{id:uid(),type:'task',title:'完成國文閱讀心得',subject:'國文',date:d,time:'16:00',notes:'閱讀〈背影〉並完成約 300 字心得。',subtasks:[{text:'閱讀課文並畫重點',done:true},{text:'整理心得大綱',done:false},{text:'完成心得初稿',done:false}],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'task',title:'英文單字複習 Unit 4',subject:'英文',date:iso(shift(today,1)),time:'18:00',notes:'複習課本與單字卡。',subtasks:[{text:'複習課本單字',done:false},{text:'完成練習測驗',done:false}],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'event',title:'數學小考：二次函數',subject:'數學',date:iso(shift(today,2)),time:'10:10',notes:'範圍：課本 2-1 ～ 2-3。',subtasks:[],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'task',title:'自然科實驗報告',subject:'自然',date:iso(shift(today,3)),time:'20:00',notes:'記得附上實驗觀察紀錄。',subtasks:[{text:'整理實驗數據',done:false},{text:'撰寫結果與討論',done:false},{text:'檢查格式並繳交',done:false}],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'event',title:'社會科分組討論',subject:'社會',date:iso(shift(today,4)),time:'13:30',notes:'圖書館二樓小組區。',subtasks:[],remindAt:'',reminderEnabled:true,createdAt:Date.now()}]};save()}
-data.timetable=Array.isArray(data.timetable)?data.timetable:[];function save(){localStorage.setItem(STORAGE,JSON.stringify(data))}if(!data.seedVersion){const mon=shift(today,-((today.getDay()+6)%7)),coursePlan=[{day:1,start:'08:10',end:'10:00',subject:'微積分',title:'微積分（一）',place:'理學大樓 201'},{day:1,start:'10:10',end:'12:00',subject:'工程圖學',title:'工程圖學',place:'工程館製圖教室'},{day:1,start:'13:10',end:'15:00',subject:'普通物理',title:'普通物理（一）',place:'理學大樓 105'},{day:2,start:'08:10',end:'10:00',subject:'工程力學',title:'工程力學導論',place:'工程館 302'},{day:2,start:'10:10',end:'12:00',subject:'微積分',title:'微積分（一）習題課',place:'理學大樓 201'},{day:2,start:'13:10',end:'15:00',subject:'計算機程式設計',title:'計算機程式設計',place:'電腦教室'},{day:3,start:'08:10',end:'10:00',subject:'材料科學導論',title:'材料科學導論',place:'工程館 204'},{day:3,start:'10:10',end:'12:00',subject:'普通物理',title:'普通物理（一）實驗',place:'物理實驗室'},{day:3,start:'13:10',end:'15:00',subject:'工程圖學',title:'工程圖學實習',place:'工程館製圖教室'},{day:4,start:'08:10',end:'10:00',subject:'微積分',title:'微積分（一）',place:'理學大樓 201'},{day:4,start:'10:10',end:'12:00',subject:'工程力學',title:'工程力學導論',place:'工程館 302'},{day:4,start:'13:10',end:'15:00',subject:'機械製造概論',title:'機械製造概論',place:'工程館 206'},{day:5,start:'08:10',end:'10:00',subject:'工程數學',title:'工程數學先修／線性代數',place:'理學大樓 303'},{day:5,start:'10:10',end:'12:00',subject:'計算機程式設計',title:'計算機程式設計實習',place:'電腦教室'},{day:5,start:'13:10',end:'15:00',subject:'材料科學導論',title:'材料科學導論討論',place:'工程館 204'}];data.timetable.push(...coursePlan.map(c=>({id:uid(),...c,coverageStart:iso(mon),coverageEnd:'',notes:'示範課表，實際課程／教室依校系公告調整。'})));const taskPlan=[{offset:1,title:'微積分｜極限與連續習題',subject:'微積分',time:'20:00',notes:'完成課本第 2 章指定題，整理不會的題型。',subtasks:['閱讀極限定義與例題','完成指定習題 1–10','訂正並標記疑問']},{offset:2,title:'工程圖學｜正投影圖練習',subject:'工程圖學',time:'18:00',notes:'練習三視圖與線型標示，按製圖規範完成。',subtasks:['確認比例與線型規範','繪製三視圖','檢查尺寸與標註']},{offset:3,title:'普通物理｜運動學問題集',subject:'普通物理',time:'21:00',notes:'整理位移、速度、加速度公式並完成題目。',subtasks:['整理公式與單位','完成課後題 1–8','檢查計算與有效位數']},{offset:4,title:'程式設計｜完成迴圈練習',subject:'計算機程式設計',time:'20:00',notes:'以 C 語言完成迴圈與條件判斷練習。',subtasks:['完成流程圖','撰寫並執行程式','測試邊界案例並提交']},{offset:5,title:'工程力學｜向量與力平衡預習',subject:'工程力學',time:'19:00',notes:'預習力分解、自由體圖及平衡條件。',subtasks:['閱讀課程講義','練習自由體圖','完成預習題']},{offset:6,title:'材料科學｜晶體結構摘要',subject:'材料科學導論',time:'18:00',notes:'整理晶格、晶胞與金屬結構重點。',subtasks:['閱讀指定章節','繪製晶胞示意圖','完成一頁重點摘要']},{offset:7,title:'機械製造｜製程觀察紀錄',subject:'機械製造概論',time:'17:00',notes:'整理鑄造、加工與量測方法的差異。',subtasks:['比較三種製程','整理優缺點與應用','準備課堂提問']}];data.items.push(...taskPlan.map(t=>({id:uid(),type:'task',title:t.title,subject:t.subject,date:iso(shift(today,t.offset)),time:t.time,notes:t.notes,subtasks:t.subtasks.map(text=>({text,done:false})),remindAt:'',reminderEnabled:true,createdAt:Date.now()})));data.seedVersion='mech-freshman-v1';save()}seedRelevantSampleData();let selectedDate=new Date(today),view='week',toastTimer;const $=id=>document.getElementById(id),dlg=$('itemDialog');
+
+
+const snapshot = await getDocFromServer(ref);
+if (auth.currentUser?.uid !== user.uid) return;
+let revision = snapshot.exists() ? snapshot.data().revision : 0;
+let data = snapshot.exists() ? snapshot.data().planner : null;
+if (snapshot.exists() && (!Number.isInteger(revision) || revision < 1 || !Array.isArray(data?.items) || !Array.isArray(data?.timetable))) {
+  throw new Error('Unsupported planner format');
+}
+let imported = null;
+if (!snapshot.exists()) {
+  let legacy;
+  try { legacy = JSON.parse(localStorage.getItem(STORAGE)); } catch {}
+  if (Array.isArray(legacy?.items) && confirm('要將此瀏覽器的舊課表與任務匯入 ' + (user.email || user.displayName || user.uid) + ' 的雲端帳號嗎？按取消可從範例課表開始。')) {
+    data = legacy;
+    imported = JSON.stringify(legacy);
+  }
+}
+let ready = false, saving = false, dirty = false;
+const status = document.getElementById('cloudStatus');
+const retrySave = document.getElementById('retrySave');
+
+async function writePlanner(planner) {
+  const expected = revision;
+  await runTransaction(db, async tx => {
+    if (auth.currentUser?.uid !== user.uid) throw new Error('Account changed');
+    const current = await tx.get(ref);
+    if ((current.exists() ? current.data().revision : 0) !== expected) {
+      const conflict = new Error('Another device updated this planner');
+      conflict.code = 'planner/conflict';
+      throw conflict;
+    }
+    tx.set(ref, {revision: expected + 1, planner});
+  });
+  revision = expected + 1;
+}
+async function save() {
+  if (!ready) return false;
+  dirty = true;
+  if (saving) {
+    while (saving) await new Promise(resolve => setTimeout(resolve, 25));
+    return !dirty;
+  }
+  saving = true;
+  retrySave.hidden = true;
+  status.textContent = '儲存中…';
+  try {
+    while (dirty) {
+      dirty = false;
+      await writePlanner(structuredClone(data));
+    }
+    status.textContent = '已儲存至雲端';
+    return true;
+  } catch (error) {
+    dirty = true;
+    if (error.code === 'planner/conflict') {
+      status.textContent = '其他裝置已更新。此頁修改尚未儲存，請保留修改內容後重新整理。';
+    } else {
+      status.textContent = '尚未儲存，請檢查連線後重試。';
+      retrySave.hidden = false;
+    }
+    return false;
+  } finally {
+    saving = false;
+  }
+}
+retrySave.onclick = save;
+window.addEventListener('beforeunload', event => {
+  if (dirty || saving) { event.preventDefault(); event.returnValue = ''; }
+});
+if(!data||!Array.isArray(data.items)){let d=iso(today);data={items:[{id:uid(),type:'task',title:'完成國文閱讀心得',subject:'國文',date:d,time:'16:00',notes:'閱讀〈背影〉並完成約 300 字心得。',subtasks:[{text:'閱讀課文並畫重點',done:true},{text:'整理心得大綱',done:false},{text:'完成心得初稿',done:false}],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'task',title:'英文單字複習 Unit 4',subject:'英文',date:iso(shift(today,1)),time:'18:00',notes:'複習課本與單字卡。',subtasks:[{text:'複習課本單字',done:false},{text:'完成練習測驗',done:false}],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'event',title:'數學小考：二次函數',subject:'數學',date:iso(shift(today,2)),time:'10:10',notes:'範圍：課本 2-1 ～ 2-3。',subtasks:[],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'task',title:'自然科實驗報告',subject:'自然',date:iso(shift(today,3)),time:'20:00',notes:'記得附上實驗觀察紀錄。',subtasks:[{text:'整理實驗數據',done:false},{text:'撰寫結果與討論',done:false},{text:'檢查格式並繳交',done:false}],remindAt:'',reminderEnabled:true,createdAt:Date.now()},{id:uid(),type:'event',title:'社會科分組討論',subject:'社會',date:iso(shift(today,4)),time:'13:30',notes:'圖書館二樓小組區。',subtasks:[],remindAt:'',reminderEnabled:true,createdAt:Date.now()}]};save()}
+data.timetable=Array.isArray(data.timetable)?data.timetable:[];if(!data.seedVersion){const mon=shift(today,-((today.getDay()+6)%7)),coursePlan=[{day:1,start:'08:10',end:'10:00',subject:'微積分',title:'微積分（一）',place:'理學大樓 201'},{day:1,start:'10:10',end:'12:00',subject:'工程圖學',title:'工程圖學',place:'工程館製圖教室'},{day:1,start:'13:10',end:'15:00',subject:'普通物理',title:'普通物理（一）',place:'理學大樓 105'},{day:2,start:'08:10',end:'10:00',subject:'工程力學',title:'工程力學導論',place:'工程館 302'},{day:2,start:'10:10',end:'12:00',subject:'微積分',title:'微積分（一）習題課',place:'理學大樓 201'},{day:2,start:'13:10',end:'15:00',subject:'計算機程式設計',title:'計算機程式設計',place:'電腦教室'},{day:3,start:'08:10',end:'10:00',subject:'材料科學導論',title:'材料科學導論',place:'工程館 204'},{day:3,start:'10:10',end:'12:00',subject:'普通物理',title:'普通物理（一）實驗',place:'物理實驗室'},{day:3,start:'13:10',end:'15:00',subject:'工程圖學',title:'工程圖學實習',place:'工程館製圖教室'},{day:4,start:'08:10',end:'10:00',subject:'微積分',title:'微積分（一）',place:'理學大樓 201'},{day:4,start:'10:10',end:'12:00',subject:'工程力學',title:'工程力學導論',place:'工程館 302'},{day:4,start:'13:10',end:'15:00',subject:'機械製造概論',title:'機械製造概論',place:'工程館 206'},{day:5,start:'08:10',end:'10:00',subject:'工程數學',title:'工程數學先修／線性代數',place:'理學大樓 303'},{day:5,start:'10:10',end:'12:00',subject:'計算機程式設計',title:'計算機程式設計實習',place:'電腦教室'},{day:5,start:'13:10',end:'15:00',subject:'材料科學導論',title:'材料科學導論討論',place:'工程館 204'}];data.timetable.push(...coursePlan.map(c=>({id:uid(),...c,coverageStart:iso(mon),coverageEnd:'',notes:'示範課表，實際課程／教室依校系公告調整。'})));const taskPlan=[{offset:1,title:'微積分｜極限與連續習題',subject:'微積分',time:'20:00',notes:'完成課本第 2 章指定題，整理不會的題型。',subtasks:['閱讀極限定義與例題','完成指定習題 1–10','訂正並標記疑問']},{offset:2,title:'工程圖學｜正投影圖練習',subject:'工程圖學',time:'18:00',notes:'練習三視圖與線型標示，按製圖規範完成。',subtasks:['確認比例與線型規範','繪製三視圖','檢查尺寸與標註']},{offset:3,title:'普通物理｜運動學問題集',subject:'普通物理',time:'21:00',notes:'整理位移、速度、加速度公式並完成題目。',subtasks:['整理公式與單位','完成課後題 1–8','檢查計算與有效位數']},{offset:4,title:'程式設計｜完成迴圈練習',subject:'計算機程式設計',time:'20:00',notes:'以 C 語言完成迴圈與條件判斷練習。',subtasks:['完成流程圖','撰寫並執行程式','測試邊界案例並提交']},{offset:5,title:'工程力學｜向量與力平衡預習',subject:'工程力學',time:'19:00',notes:'預習力分解、自由體圖及平衡條件。',subtasks:['閱讀課程講義','練習自由體圖','完成預習題']},{offset:6,title:'材料科學｜晶體結構摘要',subject:'材料科學導論',time:'18:00',notes:'整理晶格、晶胞與金屬結構重點。',subtasks:['閱讀指定章節','繪製晶胞示意圖','完成一頁重點摘要']},{offset:7,title:'機械製造｜製程觀察紀錄',subject:'機械製造概論',time:'17:00',notes:'整理鑄造、加工與量測方法的差異。',subtasks:['比較三種製程','整理優缺點與應用','準備課堂提問']}];data.items.push(...taskPlan.map(t=>({id:uid(),type:'task',title:t.title,subject:t.subject,date:iso(shift(today,t.offset)),time:t.time,notes:t.notes,subtasks:t.subtasks.map(text=>({text,done:false})),remindAt:'',reminderEnabled:true,createdAt:Date.now()})));data.seedVersion='mech-freshman-v1';save()}seedRelevantSampleData();
+if (!snapshot.exists() || JSON.stringify(data) !== JSON.stringify(snapshot.data().planner)) {
+  await writePlanner(structuredClone(data));
+  if (imported && localStorage.getItem(STORAGE) === imported) localStorage.removeItem(STORAGE);
+}
+if (auth.currentUser?.uid !== user.uid) return;
+ready = true;
+status.textContent = '已儲存至雲端';
+let selectedDate=new Date(today),view='week',page='schedule',taskFilter='all',timetableZoom=1,toastTimer;const $=id=>document.getElementById(id),dlg=$('itemDialog');
 function fmt(d,opt){return new Intl.DateTimeFormat('zh-TW',opt).format(d)}function itemsFor(date){return data.items.filter(i=>i.date===iso(date)).sort((a,b)=>(a.time||'').localeCompare(b.time||''))}function taskPercent(t){let s=t.subtasks||[];return s.length?Math.round(s.filter(x=>x.done).length/s.length*100):(t.done?100:0)}function weekStart(d){let x=new Date(d);x.setDate(x.getDate()-((x.getDay()+6)%7));return x}function toast(msg){let el=$('toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2300)}
 const weekdays=[{id:1,label:'星期一'},{id:2,label:'星期二'},{id:3,label:'星期三'},{id:4,label:'星期四'},{id:5,label:'星期五'},{id:6,label:'星期六'},{id:0,label:'星期日'}];
 function renderTimetable(){
@@ -71,7 +317,7 @@ function renderTimetable(){
   const maxEnd=Math.max(...valid.map(slot=>toMins(slot.end)));
   const lastHour=Math.max(21,Math.ceil(maxEnd/60));
   const hours=Array.from({length:Math.max(1,lastHour-firstHour)},(_,index)=>firstHour+index);
-  const hourHeight=72;
+  const hourHeight=108;
   const formatTime=minutes=>String(Math.floor(minutes/60)).padStart(2,'0')+':'+String(minutes%60).padStart(2,'0');
   const lessonHtml=slot=>{
     const color=colors[slot.subject]||['#e8eee8','#657d6b'];
@@ -88,29 +334,73 @@ function renderTimetable(){
     }).join('');
     return timeCell+dayCells;
   }).join('');
-  area.innerHTML='<div class="timetable-wrap"><div class="timetable-grid" style="--hour-count:'+hours.length+'"><div class="tt-cell tt-head">時間</div>'+weekdays.map(day=>'<div class="tt-cell tt-head">'+esc(day.label)+'</div>').join('')+rows+'</div></div>';
+  area.innerHTML='<div class="timetable-wrap" tabindex="0" aria-label="可捲動的固定課表"><div class="timetable-grid" style="--hour-count:'+hours.length+'"><div class="tt-cell tt-head">時間</div>'+weekdays.map(day=>'<div class="tt-cell tt-head">'+esc(day.label)+'</div>').join('')+rows+'</div></div>';
+  setTimetableZoom(timetableZoom);
+  area.querySelector('.timetable-wrap').addEventListener('wheel',event=>{if(!event.ctrlKey&&!event.metaKey)return;event.preventDefault();setTimetableZoom(timetableZoom+(event.deltaY<0?.25:-.25))},{passive:false});
 }
-function openSlotForm(slot=null){let form=$('timetableForm');form.reset();$('slotId').value=slot?.id||'';$('slotDay').value=String(slot?.day??1);$('slotSubject').value=slot?.subject||'國文';$('slotTitle').value=slot?.title||'';$('slotStart').value=slot?.start||'08:00';$('slotEnd').value=slot?.end||'08:50';$('slotPlace').value=slot?.place||'';$('slotCoverageStart').value=slot?.coverageStart||'';$('slotCoverageEnd').value=slot?.coverageEnd||'';$('slotNotes').value=slot?.notes||'';$('timetableDialogTitle').textContent=slot?'編輯固定課程':'新增固定課程';$('deleteSlot').style.display=slot?'inline-block':'none';$('timetableDialog').showModal()}
-function saveSlot(e){e.preventDefault();let id=$('slotId').value,start=$('slotStart').value,end=$('slotEnd').value;if(end<=start){toast('結束時間要晚於開始時間');return}let slot={id:id||uid(),day:Number($('slotDay').value),subject:$('slotSubject').value,title:$('slotTitle').value.trim(),start,end,place:$('slotPlace').value.trim(),coverageStart:$('slotCoverageStart').value,coverageEnd:$('slotCoverageEnd').value,notes:$('slotNotes').value.trim()};let old=data.timetable.find(x=>x.id===id);data.timetable=old?data.timetable.map(x=>x.id===id?slot:x):[...data.timetable,slot];save();$('timetableDialog').close();renderTimetable();toast(old?'已更新固定課程':'已新增每週固定課程')}
-function deleteSlot(id){let slot=data.timetable.find(x=>x.id===id);if(!slot)return;if(!confirm(`確定刪除「${slot.title}」？`))return;data.timetable=data.timetable.filter(x=>x.id!==id);save();$('timetableDialog').close();renderTimetable();toast('已刪除固定課程')}
-function render(){let pending=data.items.filter(x=>x.type==='task'&&taskPercent(x)<100).length;let week=weekStart(selectedDate),weekEnd=shift(week,6),wkItems=data.items.filter(x=>x.date>=iso(week)&&x.date<=iso(weekEnd));$('statTasks').textContent=pending;$('statEvents').textContent=wkItems.length;$('statProgress').textContent=data.items.filter(x=>x.type==='task').length?`${Math.round(data.items.filter(x=>x.type==='task').reduce((a,x)=>a+taskPercent(x),0)/data.items.filter(x=>x.type==='task').length)}%`:'0%';$('sideTaskCount').textContent=pending;let reminders=data.items.filter(x=>x.reminderEnabled&&x.remindAt&&new Date(x.remindAt)>new Date()).length;$('sideNoticeCount').textContent=reminders;
-$('fullDate').textContent=fmt(today,{year:'numeric',month:'long',day:'numeric',weekday:'long'});let h=new Date().getHours();$('greeting').textContent=`${h<12?'早安':h<18?'午安':'晚安'}，今天也加油 ${h<18?'☀':'✦'}`;$('periodLabel').textContent=view==='day'?fmt(selectedDate,{year:'numeric',month:'long',day:'numeric'}):view==='month'?fmt(selectedDate,{year:'numeric',month:'long'}):`${fmt(week,{month:'short',day:'numeric'})} — ${fmt(weekEnd,{month:'short',day:'numeric'})}`;$('calendarSub').textContent=view==='day'?'聚焦今天的安排':view==='timetable'?'每週重複的固定課程':'安排你的每一天';document.querySelector('.panel-title').textContent=view==='timetable'?'每週固定課表':'學習行事曆';document.querySelector('.panel').classList.toggle('timetable-active',view==='timetable');document.querySelector('.switch').style.display=view==='timetable'?'none':'flex';document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===(view==='timetable'?'timetable':view==='day'||view==='week'||view==='month'?'schedule':'dashboard')));document.querySelectorAll('[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===(view==='timetable'?'timetable':view==='day'||view==='week'||view==='month'?'schedule':'dashboard')));let addSlotBtn=$('addSlotBtn');if(view==='timetable'&&!addSlotBtn){addSlotBtn=document.createElement('button');addSlotBtn.id='addSlotBtn';addSlotBtn.className='add-btn';addSlotBtn.textContent='＋ 新增課程';addSlotBtn.classList.add('timetable-add-btn');document.querySelector('.panel-head').appendChild(addSlotBtn);addSlotBtn.onclick=()=>openSlotForm()}else if(addSlotBtn){addSlotBtn.style.display=view==='timetable'?'':'none'}$('dayViewBtn').classList.toggle('active',view==='day');$('weekViewBtn').classList.toggle('active',view==='week');$('monthViewBtn').classList.toggle('active',view==='month');renderCalendar();renderTasks();renderDeadlines();renderSubjects()}
+function openSlotForm(slot=null){let form=$('timetableForm');form.reset();$('slotId').value=slot?.id||'';$('slotDay').value=String(slot?.day??1);$('slotSubject').value=slot?.subject||subjects[0];$('slotTitle').value=slot?.title||'';$('slotStart').value=slot?.start||'08:00';$('slotEnd').value=slot?.end||'08:50';$('slotPlace').value=slot?.place||'';$('slotCoverageStart').value=slot?.coverageStart||'';$('slotCoverageEnd').value=slot?.coverageEnd||'';$('slotNotes').value=slot?.notes||'';$('timetableDialogTitle').textContent=slot?'編輯固定課程':'新增固定課程';$('deleteSlot').style.display=slot?'inline-block':'none';$('timetableDialog').showModal()}
+function saveSlot(e){e.preventDefault();let id=$('slotId').value,start=$('slotStart').value,end=$('slotEnd').value;if(end<=start){toast('結束時間要晚於開始時間');return}let slot={id:id||uid(),day:Number($('slotDay').value),subject:$('slotSubject').value,title:$('slotTitle').value.trim(),start,end,place:$('slotPlace').value.trim(),coverageStart:$('slotCoverageStart').value,coverageEnd:$('slotCoverageEnd').value,notes:$('slotNotes').value.trim()};let old=data.timetable.find(x=>x.id===id);data.timetable=old?data.timetable.map(x=>x.id===id?slot:x):[...data.timetable,slot];save();$('timetableDialog').close();render();toast(old?'已更新固定課程':'已新增每週固定課程')}
+function deleteSlot(id){let slot=data.timetable.find(x=>x.id===id);if(!slot)return;if(!confirm(`確定刪除「${slot.title}」？`))return;data.timetable=data.timetable.filter(x=>x.id!==id);save();$('timetableDialog').close();render();toast('已刪除固定課程')}
+function navigate(nextPage){
+  page=nextPage;
+  if(page==='timetable')view='timetable';
+  else if(page==='schedule'&&view==='timetable')view='week';
+  render();$('greeting').focus({preventScroll:true});
+}
+function render(){
+  const names={schedule:'行事曆',timetable:'固定課表',tasks:'課業任務',reminders:'提醒通知',coverage:'科目時程'};
+  const descriptions={schedule:'依日期查看任務、行程與考試。',timetable:'管理每週固定課程，使用縮放調整閱讀大小。',tasks:'拆解課業步驟，追蹤每一項任務的完成進度。',reminders:'集中查看提醒時間與近期截止事項。',coverage:'查看各科明確設定的開始與結束日期。'};
+  const pending=data.items.filter(x=>x.type==='task'&&taskPercent(x)<100).length;
+  $('sideTaskCount').textContent=pending;
+  $('sideNoticeCount').textContent=data.items.filter(x=>x.reminderEnabled&&x.remindAt&&new Date(x.remindAt)>new Date()).length;
+  $('fullDate').textContent=fmt(today,{year:'numeric',month:'long',day:'numeric',weekday:'long'});
+  $('greeting').textContent=names[page];$('pageDescription').textContent=descriptions[page];
+  document.querySelector('.top-title').textContent='學習空間　/　'+names[page];
+  for(const [id,visible] of Object.entries({calendarPage:page==='schedule'||page==='timetable',tasksPage:page==='tasks',remindersPage:page==='reminders',coveragePage:page==='coverage'}))$(id).hidden=!visible;
+  document.querySelector('.date-controls').hidden=page!=='schedule';
+  document.querySelectorAll('[data-view]').forEach(b=>{const active=b.dataset.view===page;b.classList.toggle('active',active);if(active)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
+  const week=weekStart(selectedDate),weekEnd=shift(week,6);
+  $('periodLabel').textContent=view==='day'?fmt(selectedDate,{year:'numeric',month:'long',day:'numeric'}):view==='month'?fmt(selectedDate,{year:'numeric',month:'long'}):fmt(week,{month:'short',day:'numeric'})+' — '+fmt(weekEnd,{month:'short',day:'numeric'});
+  $('calendarTitle').textContent=page==='timetable'?'每週固定課表':'學習行事曆';
+  $('calendarSub').textContent=page==='timetable'?'每週重複的固定課程':view==='day'?'聚焦當天的安排':'安排你的每一天';
+  document.querySelector('.switch').hidden=page!=='schedule';
+  $('calendarPage').classList.toggle('timetable-active',page==='timetable');
+  $('addSlotBtn').hidden=$('timetableZoom').hidden=page!=='timetable';$('addEventQuick').hidden=page!=='schedule';
+  for(const mode of ['day','week','month'])$(mode+'ViewBtn').classList.toggle('active',view===mode);
+  renderCalendar();renderTasks();renderDeadlines();renderReminders();renderSubjects();
+}
+function setTimetableZoom(value){
+  const viewport=document.querySelector('.timetable-wrap');
+  const old=timetableZoom;timetableZoom=Math.max(.75,Math.min(2,Math.round(value*100)/100));
+  const scroll=viewport?{left:viewport.scrollLeft/old,top:viewport.scrollTop/old}:null;
+  const grid=document.querySelector('.timetable-grid');if(grid)grid.style.zoom=timetableZoom;
+  if(viewport&&scroll){viewport.scrollLeft=scroll.left*timetableZoom;viewport.scrollTop=scroll.top*timetableZoom}
+  $('zoomLevel').textContent=Math.round(timetableZoom*100)+'%';$('zoomOut').disabled=timetableZoom<=.75;$('zoomIn').disabled=timetableZoom>=2;
+}
+function renderReminders(){
+  const reminders=data.items.filter(x=>x.reminderEnabled&&x.remindAt).sort((a,b)=>a.remindAt.localeCompare(b.remindAt));
+  const permission='Notification' in window?Notification.permission:'unsupported';
+  $('reminderStatus').textContent=permission==='granted'?'瀏覽器通知已開啟。網頁關閉後不保證送達。':permission==='denied'?'瀏覽器通知已封鎖，可在瀏覽器網站設定中調整。站內提醒仍可查看。':permission==='unsupported'?'此瀏覽器不支援系統通知，仍可查看站內提醒。':'瀏覽器通知尚未開啟，仍可查看站內提醒。';
+  $('reminderList').innerHTML=reminders.length?reminders.map(item=>'<div class="deadline" data-edit="'+esc(item.id)+'"><div class="deadline-copy"><b>'+esc(item.title)+'</b><small>'+esc(item.subject)+' · '+fmt(new Date(item.remindAt),{year:'numeric',month:'numeric',day:'numeric',hour:'2-digit',minute:'2-digit'})+'</small></div><span class="deadline-tag">'+(new Date(item.remindAt)<=new Date()?'已到提醒時間':'待提醒')+'</span></div>').join(''):'<div class="empty">尚未設定提醒時間，可在任務或行程編輯視窗中新增。</div>';
+}
 function renderCalendar(){let area=$('calendarArea');if(view==='timetable'){renderTimetable();return}if(view==='month'){let first=new Date(selectedDate.getFullYear(),selectedDate.getMonth(),1),start=weekStart(first),last=new Date(selectedDate.getFullYear(),selectedDate.getMonth()+1,0),end=shift(weekStart(last),6),days=Math.round((end-start)/86400000)+1;area.innerHTML=`<div class="calendar-wrap month-wrap"><div class="week-labels">${['一','二','三','四','五','六','日'].map(x=>`<div>${x}</div>`).join('')}</div><div class="week-grid month-grid">${Array.from({length:days},(_,n)=>{let d=shift(start,n),inMonth=d.getMonth()===selectedDate.getMonth(),isToday=iso(d)===iso(today),isSelected=iso(d)===iso(selectedDate),events=itemsFor(d);return `<div class="daycol month-day ${inMonth?'':'outside-month'}"><div class="dayhead"><strong class="${isToday?'today-mark ':''}${isSelected?'selected':''}" data-selectdate="${iso(d)}">${d.getDate()}</strong></div>${events.slice(0,3).map(i=>{let c=colors[i.subject]||['#e8eee8','#657d6b'];return `<div class="event month-event" style="--event:${c[1]};--eventbg:${c[0]}" data-edit="${esc(i.id)}"><b>${esc(i.title)}</b><small>${esc(i.time||'')} · ${esc(i.subject)}</small></div>`}).join('')}${events.length>3?`<div class="small-note">+${events.length-3} 項</div>`:''}</div>`}).join('')}</div></div>`;return}if(view==='day'){let list=itemsFor(selectedDate);area.innerHTML=`<div class="today-timeline">${list.length?list.map(i=>{let c=colors[i.subject]||['#e8eee8','#657d6b'];return `<div class="timeline-row"><div class="time-label">${esc(i.time||'全天')}</div><div class="track"></div><div class="timeline-card" style="--event:${c[1]}" data-edit="${esc(i.id)}"><b>${esc(i.title)}</b><small>${esc(i.subject)} · ${i.type==='task'?'課業任務':'行程'}${i.notes?` · ${esc(i.notes)}`:''}</small></div></div>`}).join(''):'<div class="empty">這天還沒有安排，留白也是一種節奏。</div>'}</div>`;return}let start=weekStart(selectedDate);area.innerHTML=`<div class="calendar-wrap"><div class="week-labels">${['一','二','三','四','五','六','日'].map(x=>`<div>${x}</div>`).join('')}</div><div class="week-grid">${Array.from({length:7},(_,n)=>{let d=shift(start,n),isToday=iso(d)===iso(today),isSelected=iso(d)===iso(selectedDate);let events=itemsFor(d);return `<div class="daycol"><div class="dayhead">${fmt(d,{month:'numeric'})}月<strong class="${isSelected?'selected':''}" data-selectdate="${iso(d)}">${d.getDate()}</strong></div>${events.slice(0,4).map(i=>{let c=colors[i.subject]||['#e8eee8','#657d6b'];return `<div class="event" style="--event:${c[1]};--eventbg:${c[0]}" data-edit="${esc(i.id)}"><b>${esc(i.title)}</b><small>${esc(i.time||'')} ${esc(i.subject)}</small></div>`}).join('')}${events.length>4?`<div class="small-note">+${events.length-4} 項</div>`:''}</div>`}).join('')}</div></div>`}
-function renderTasks(){let el=$('taskList'),arr=data.items.filter(i=>i.type==='task'&&taskPercent(i)<100).sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time)).slice(0,5);el.innerHTML=arr.length?arr.map(t=>{let p=taskPercent(t),subs=t.subtasks||[];return `<div class="task-row"><input type="checkbox" aria-label="${p===100?'取消完成':'標記完成'}：${esc(t.title)}" ${p===100?'checked':''} data-complete="${esc(t.id)}"><div><div class="task-title">${esc(t.title)}</div><div class="task-meta">${esc(t.subject)} · ${fmt(parseDate(t.date),{month:'numeric',day:'numeric'})} 截止${t.notes?` · ${esc(t.notes)}`:''}</div>${subs.length?`<div class="subtask-checklist" aria-label="子任務清單">${subs.map((sub,n)=>`<label class="subtask-check-row ${sub.done?'done':''}"><input type="checkbox" data-subtask-task="${esc(t.id)}" data-subtask-index="${n}" ${sub.done?'checked':''}><span>${esc(sub.text)}</span></label>`).join('')}</div>`:'<div class="mini-sub" style="margin-top:8px">尚未加入子任務，可編輯任務新增清單。</div>'}<div class="progress"><span style="width:${p}%"></span></div><div class="task-bottom"><span class="subtask-completion">${subs.filter(s=>s.done).length}/${subs.length} 子任務達成 · ${p}%</span><span class="task-actions"><button class="tiny-btn" data-edit="${esc(t.id)}" title="編輯／備註">編輯</button><button class="tiny-btn" data-delete="${esc(t.id)}" title="刪除">刪除</button></span></div></div></div>`}).join(''):'<div class="empty">太好了！目前沒有待完成任務 ☀</div>'}
-function renderDeadlines(){let el=$('deadlines'),a=data.items.filter(i=>i.date>=iso(today)).sort((x,y)=>x.date.localeCompare(y.date)||x.time.localeCompare(y.time)).slice(0,4);el.innerHTML=a.length?a.map(i=>{let d=parseDate(i.date),diff=Math.round((d-today)/86400000);return `<div class="deadline" data-edit="${esc(i.id)}"><div class="deadline-date"><b>${fmt(d,{day:'2-digit'})}</b><small>${fmt(d,{month:'short'})}</small></div><div class="deadline-copy"><b>${esc(i.title)}</b><small>${esc(i.subject)} · ${esc(i.time||'全天')}</small></div><span class="deadline-tag">${diff===0?'今天':diff===1?'明天':`${diff} 天後`}</span></div>`}).join(''):'<div class="empty">還沒有近期截止事項。</div>'}
+function renderTasks(){const tasks=data.items.filter(x=>x.type==='task');$('taskSummary').textContent='共 '+tasks.length+' 項 · 待完成 '+tasks.filter(x=>taskPercent(x)<100).length+' 項 · 已完成 '+tasks.filter(x=>taskPercent(x)===100).length+' 項';document.querySelectorAll('[data-task-filter]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.taskFilter===taskFilter)));let el=$('taskList'),arr=data.items.filter(i=>i.type==='task'&&(taskFilter==='all'||(taskFilter==='pending'?taskPercent(i)<100:taskPercent(i)===100))).sort((a,b)=>a.date.localeCompare(b.date)||(a.time||'').localeCompare(b.time||''));el.innerHTML=arr.length?arr.map(t=>{let p=taskPercent(t),subs=t.subtasks||[];return `<div class="task-row"><input type="checkbox" aria-label="${p===100?'取消完成':'標記完成'}：${esc(t.title)}" ${p===100?'checked':''} data-complete="${esc(t.id)}"><div><div class="task-title">${esc(t.title)}</div><div class="task-meta">${esc(t.subject)} · ${fmt(parseDate(t.date),{month:'numeric',day:'numeric'})} 截止${t.notes?` · ${esc(t.notes)}`:''}</div>${subs.length?`<div class="subtask-checklist" aria-label="子任務清單">${subs.map((sub,n)=>`<label class="subtask-check-row ${sub.done?'done':''}"><input type="checkbox" data-subtask-task="${esc(t.id)}" data-subtask-index="${n}" ${sub.done?'checked':''}><span>${esc(sub.text)}</span></label>`).join('')}</div>`:'<div class="mini-sub" style="margin-top:8px">尚未加入子任務，可編輯任務新增清單。</div>'}<div class="progress"><span style="width:${p}%"></span></div><div class="task-bottom"><span class="subtask-completion">${subs.filter(s=>s.done).length}/${subs.length} 子任務達成 · ${p}%</span><span class="task-actions"><button class="tiny-btn" data-edit="${esc(t.id)}" title="編輯／備註">編輯</button><button class="tiny-btn" data-delete="${esc(t.id)}" title="刪除">刪除</button></span></div></div></div>`}).join(''):'<div class="empty">這個分類目前沒有任務。</div>'}
+function renderDeadlines(){let el=$('deadlines'),a=data.items.filter(i=>i.date>=iso(today)).sort((x,y)=>x.date.localeCompare(y.date)||x.time.localeCompare(y.time));el.innerHTML=a.length?a.map(i=>{let d=parseDate(i.date),diff=Math.round((d-today)/86400000);return `<div class="deadline" data-edit="${esc(i.id)}"><div class="deadline-date"><b>${fmt(d,{day:'2-digit'})}</b><small>${fmt(d,{month:'short'})}</small></div><div class="deadline-copy"><b>${esc(i.title)}</b><small>${esc(i.subject)} · ${esc(i.time||'全天')}</small></div><span class="deadline-tag">${diff===0?'今天':diff===1?'明天':`${diff} 天後`}</span></div>`}).join(''):'<div class="empty">還沒有近期截止事項。</div>'}
 function buildRelevantSamplePlan(){const plan=[{subject:'工程圖學',taskTitle:'正投影與三視圖練習',eventTitle:'工程圖學｜線型與尺寸標註自我檢核',notes:'依工程圖學課堂內容完成三視圖，檢查可見線、隱藏線、中心線與尺寸標註。',steps:['閱讀本週投影法講義','完成指定物件三視圖','依線型規範檢查並修正']},{subject:'普通物理',taskTitle:'運動學公式與圖像整理',eventTitle:'普通物理｜運動學觀念複習',notes:'整理位移、速度、加速度與運動圖像的關係，完成課堂指定題並檢查單位。',steps:['整理位移、速度、加速度公式','完成課堂指定運動學題','檢查單位與圖像斜率']},{subject:'微積分',taskTitle:'極限與連續指定題',eventTitle:'微積分｜極限與連續複習',notes:'依課堂範例練習極限定義、左右極限與連續判斷，標記不確定的解題步驟。',steps:['重讀極限與連續定義','完成指定習題','訂正並整理錯題原因']},{subject:'工程力學',taskTitle:'自由體圖與力平衡題',eventTitle:'工程力學｜向量分解與平衡條件複習',notes:'練習繪製自由體圖、分解力向量，並用平衡方程式驗算結果。',steps:['標示作用力與座標軸','繪製自由體圖並分解力','套用平衡方程式驗算']},{subject:'材料科學導論',taskTitle:'晶體結構與晶胞摘要',eventTitle:'材料科學｜晶體結構觀念整理',notes:'整理晶格、晶胞與常見金屬晶體結構，依課堂教材繪圖並核對特徵。',steps:['整理晶格與晶胞名詞','繪製課堂介紹的晶體結構','比對結構特徵與差異']},{subject:'機械製造概論',taskTitle:'製造程序比較表',eventTitle:'機械製造｜製程與量測重點複習',notes:'依課堂內容比較鑄造、切削加工與量測流程，整理適用情境與注意事項。',steps:['整理本週介紹的製程','比較加工方式與適用情境','列出量測與安全注意事項']},{subject:'計算機程式設計',taskTitle:'條件判斷與迴圈程式練習',eventTitle:'程式設計｜迴圈與邊界條件測試',notes:'依課堂範例撰寫條件判斷及迴圈，測試一般輸入、邊界值與錯誤輸入。',steps:['依題意整理流程或偽碼','撰寫條件與迴圈','測試邊界值並修正']},{subject:'工程數學',taskTitle:'線性方程組與矩陣運算',eventTitle:'工程數學｜矩陣與線性方程組複習',notes:'依課堂講義整理矩陣運算與線性方程組解法，核對計算步驟。',steps:['整理矩陣與方程組記號','完成課堂指定計算題','代回原方程組驗算']}];const shuffled=plan.slice();for(let i=shuffled.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[shuffled[i],shuffled[j]]=[shuffled[j],shuffled[i]]}return shuffled}
 function seedRelevantSampleData(){if(data.sampleContentVersion===2)return;data.items=data.items.filter(item=>!item.sampleGenerated);{const now=iso(today),week=weekStart(today),availableSlots=data.timetable.filter(slot=>!slot.coverageEnd||slot.coverageEnd>=now),slotsBySubject=new Map();for(const slot of availableSlots){const list=slotsBySubject.get(slot.subject)||[];list.push(slot);slotsBySubject.set(slot.subject,list)}const plan=buildRelevantSamplePlan(),seeded=[];for(let index=0;index<plan.length;index++){const item=plan[index],slots=slotsBySubject.get(item.subject)||[],slot=slots.length?slots[Math.floor(Math.random()*slots.length)]:null,dayOffset=slot?((Number(slot.day)-today.getDay()+7)%7):(index%5+1),baseDate=shift(week,dayOffset),daysAfter=1+Math.floor(Math.random()*3),taskDate=shift(baseDate,Math.max(daysAfter,(today-baseDate)/86400000+1)),meetingDate=shift(taskDate,1+Math.floor(Math.random()*2)),timeChoices=['17:30','18:30','19:30','20:30'];seeded.push({id:uid(),type:'task',sampleGenerated:true,title:`${item.subject}｜${item.taskTitle}`,subject:item.subject,date:iso(taskDate),time:timeChoices[Math.floor(Math.random()*timeChoices.length)],notes:item.notes,subtasks:item.steps.map(text=>({text,done:false})),remindAt:'',reminderEnabled:true,createdAt:Date.now()+index},{id:uid(),type:'event',sampleGenerated:true,title:item.eventTitle,subject:item.subject,date:iso(meetingDate),time:slot?.start||'19:00',notes:item.notes,subtasks:[],remindAt:'',reminderEnabled:true,createdAt:Date.now()+index+100})}data.items.push(...seeded);data.sampleContentVersion=2;save()}}
 function dateRangeLabel(start,end){const show=s=>fmt(parseDate(s),{year:'numeric',month:'numeric',day:'numeric'});if(start&&end)return `${show(start)} – ${show(end)}`;if(start)return `${show(start)} 起，未設定結束日`;if(end)return `未設定開始日，至 ${show(end)}`;return ''}
 function subjectCoverageRange(subject){const slots=data.timetable.filter(slot=>slot.subject===subject),items=data.items.filter(item=>item.subject===subject&&item.date),starts=slots.map(slot=>slot.coverageStart).filter(Boolean).sort(),ends=slots.map(slot=>slot.coverageEnd).filter(Boolean).sort();if(!starts.length&&!ends.length)return null;return {start:starts[0]||'',end:ends.at(-1)||'',count:slots.length,itemCount:items.length}}
 function renderSubjects(){$('subjects').innerHTML=subjects.map(subject=>{const rangeData=subjectCoverageRange(subject),range=rangeData?dateRangeLabel(rangeData.start,rangeData.end):'',slotCount=rangeData?.count??data.timetable.filter(slot=>slot.subject===subject).length,itemCount=rangeData?.itemCount??data.items.filter(item=>item.subject===subject&&item.date).length;return '<div class="subject-item"><div class="subject"><span class="dot" style="--c:'+(colors[subject]||['#e8eee8','#657d6b'])[1]+'"></span>'+subject+'</div><div class="subject-range '+(range?'':'empty')+'">'+(range?'<span class="subject-range-label">時程</span> '+range:'尚未設定實際涵蓋日期')+'</div></div>'}).join('');const target=$('subjectCoverage');if(!target)return;target.innerHTML='<div class="coverage-intro">僅以固定課表明確設定的起訖日期顯示實際涵蓋時程；任務與行程日期不作為科目期間。</div><div class="coverage-list">'+subjects.map(subject=>{const rangeData=subjectCoverageRange(subject),slotCount=rangeData?.count??data.timetable.filter(slot=>slot.subject===subject).length,itemCount=rangeData?.itemCount??data.items.filter(item=>item.subject===subject&&item.date).length;return '<article class="coverage-item"><span class="dot" style="--c:'+(colors[subject]||['#e8eee8','#657d6b'])[1]+';margin-top:5px"></span><div><div class="coverage-name">'+subject+'</div>'+(rangeData?'<div class="coverage-period">'+dateRangeLabel(rangeData.start,rangeData.end)+'</div>':'<div class="coverage-period">尚未設定實際涵蓋日期</div>')+'<div class="coverage-meta">'+slotCount+' 堂固定課 · '+itemCount+' 筆任務／行程</div></div></article>'}).join('')+'</div>'}
-function openForm(item=null,kind='task'){let form=$('itemForm');form.reset();$('itemId').value=item?.id||'';$('kind').value=item?.type||kind;$('subject').value=item?.subject||'國文';$('title').value=item?.title||'';$('date').value=item?.date||iso(selectedDate);$('time').value=item?.time||'15:00';$('notes').value=item?.notes||'';$('remindAt').value=item?.remindAt||'';$('reminderEnabled').checked=item?.reminderEnabled!==false;$('dialogTitle').textContent=item?'編輯課業與行程':'新增課業或行程';$('deleteItem').style.display=item?'inline-block':'none';$('subtasksField').style.display=$('kind').value==='task'?'grid':'none';$('subtaskInputs').innerHTML='';(item?.subtasks?.length?item.subtasks:[{text:'',done:false}]).forEach(s=>addSubtaskInput(s));dlg.showModal()}
+function openForm(item=null,kind='task'){let form=$('itemForm');form.reset();$('itemId').value=item?.id||'';$('kind').value=item?.type||kind;$('subject').value=item?.subject||subjects[0];$('title').value=item?.title||'';$('date').value=item?.date||iso(selectedDate);$('time').value=item?.time||'15:00';$('notes').value=item?.notes||'';$('remindAt').value=item?.remindAt||'';$('reminderEnabled').checked=item?.reminderEnabled!==false;$('dialogTitle').textContent=item?'編輯課業與行程':'新增課業或行程';$('deleteItem').style.display=item?'inline-block':'none';$('subtasksField').style.display=$('kind').value==='task'?'grid':'none';$('subtaskInputs').innerHTML='';(item?.subtasks?.length?item.subtasks:[{text:'',done:false}]).forEach(s=>addSubtaskInput(s));dlg.showModal()}
 function addSubtaskInput(s={text:'',done:false}){let row=document.createElement('div');row.className='subtask-edit';row.innerHTML=`<input maxlength="100" aria-label="子任務內容" placeholder="例如：閱讀第 12–15 頁" value="${esc(s.text)}"><button type="button" aria-label="刪除此子任務">×</button>`;row.querySelector('button').onclick=()=>row.remove();$('subtaskInputs').append(row)}
 function removeItem(id){let item=data.items.find(i=>i.id===id);if(!item)return;if(!confirm(`確定刪除「${item.title}」？此操作無法復原。`))return;data.items=data.items.filter(i=>i.id!==id);save();dlg.close();render();toast('已刪除項目')}
-$('itemForm').addEventListener('submit',e=>{e.preventDefault();let id=$('itemId').value,old=data.items.find(x=>x.id===id),type=$('kind').value,subtasks=type==='task'?[...$('subtaskInputs').querySelectorAll('input')].map((input,n)=>({text:input.value.trim(),done:old?.subtasks?.find(s=>s.text===input.value.trim())?.done||false})).filter(s=>s.text):[];let item={id:id||uid(),type,title:$('title').value.trim(),subject:$('subject').value,date:$('date').value,time:$('time').value,notes:$('notes').value.trim(),subtasks,remindAt:$('remindAt').value,reminderEnabled:$('reminderEnabled').checked,createdAt:old?.createdAt||Date.now()};if(!item.title)return;if(old)data.items=data.items.map(x=>x.id===id?item:x);else data.items.push(item);save();dlg.close();selectedDate=parseDate(item.date);render();toast(old?'已更新項目':'已新增項目');if(item.reminderEnabled&&item.remindAt&&Notification.permission==='granted')scheduleNotice(item)});
-$('kind').onchange=()=>{$('subtasksField').style.display=$('kind').value==='task'?'grid':'none'};$('addSubtask').onclick=()=>addSubtaskInput();$('addTaskBtn').onclick=()=>openForm();$('addEventQuick').onclick=()=>openForm(null,'event');$('mobileAdd').onclick=()=>openForm();$('closeDialog').onclick=()=>dlg.close();$('cancelDialog').onclick=()=>dlg.close();$('deleteItem').onclick=()=>removeItem($('itemId').value);document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>{if(b.dataset.view==='schedule'){view='week';render();return}if(b.dataset.view==='timetable'){view='timetable';render();return}document.querySelectorAll('[data-view]').forEach(x=>x.classList.toggle('active',x===b));if(b.dataset.view==='tasks'){$('taskList').scrollIntoView({behavior:'smooth',block:'center'});toast('顯示課業任務')}if(b.dataset.view==='dashboard')window.scrollTo({top:0,behavior:'smooth'})});$('timetableForm').addEventListener('submit',saveSlot);$('closeTimetableDialog').onclick=()=>$('timetableDialog').close();$('cancelSlot').onclick=()=>$('timetableDialog').close();$('deleteSlot').onclick=()=>deleteSlot($('slotId').value);$('editCoverage').onclick=()=>{view='timetable';render();toast('請在固定課表編輯各科開始與結束日期')};$('dayViewBtn').onclick=()=>{view='day';render()};$('weekViewBtn').onclick=()=>{view='week';render()};$('monthViewBtn').onclick=()=>{view='month';render()};$('prevDate').onclick=()=>{if(view==='month')selectedDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth()-1,1);else selectedDate=shift(selectedDate,view==='week'?-7:-1);render()};$('nextDate').onclick=()=>{if(view==='month')selectedDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth()+1,1);else selectedDate=shift(selectedDate,view==='week'?7:1);render()};$('goToday').onclick=()=>{selectedDate=new Date(today);render()};document.addEventListener('click',e=>{let edit=e.target.closest('[data-edit]'),slotEdit=e.target.closest('[data-slot-edit]'),subCheck=e.target.closest('[data-subtask-task]'),del=e.target.closest('[data-delete]'),check=e.target.closest('[data-complete]'),day=e.target.closest('[data-selectdate]');if(subCheck){let task=data.items.find(x=>x.id===subCheck.dataset.subtaskTask),index=Number(subCheck.dataset.subtaskIndex);if(task?.subtasks?.[index]){task.subtasks[index].done=subCheck.checked;task.done=task.subtasks.every(x=>x.done);save();render();toast(subCheck.checked?'已標記子任務達成':'已取消子任務達成')}return}if(slotEdit){let slot=data.timetable.find(x=>x.id===slotEdit.dataset.slotEdit);if(slot)openSlotForm(slot)}if(edit){let item=data.items.find(i=>i.id===edit.dataset.edit);if(item)openForm(item)}if(del)removeItem(del.dataset.delete);if(day){selectedDate=parseDate(day.dataset.selectdate);view='day';render()}if(check){let t=data.items.find(i=>i.id===check.dataset.complete);if(t){if(!t.subtasks?.length)t.done=check.checked;else{let first=t.subtasks.find(s=>!s.done);if(first)first.done=true;else t.subtasks.forEach(s=>s.done=false)}save();render()}}});
-function scheduleNotice(item){let ms=new Date(item.remindAt).getTime()-Date.now();if(ms>0&&ms<2147480000)setTimeout(()=>{if(Notification.permission==='granted')new Notification('拾光提醒',{body:`${item.title} · ${item.subject}`})},ms)}$('notifyBtn').onclick=async()=>{if(!('Notification'in window)){toast('此瀏覽器不支援通知，仍可使用站內提醒');return}try{let p=await Notification.requestPermission();toast(p==='granted'?'通知已開啟':'未取得通知權限；站內提醒仍可使用');if(p==='granted')data.items.filter(i=>i.reminderEnabled&&i.remindAt).forEach(scheduleNotice)}catch{toast('無法啟用瀏覽器通知')}};$('navNotice').onclick=()=>{let upcoming=data.items.filter(i=>i.reminderEnabled&&i.remindAt).sort((a,b)=>a.remindAt.localeCompare(b.remindAt));toast(upcoming.length?`目前設定 ${upcoming.length} 個提醒`:'尚未設定提醒；新增項目即可自訂提醒時間')};
+$('itemForm').addEventListener('submit',e=>{e.preventDefault();let id=$('itemId').value,old=data.items.find(x=>x.id===id),type=$('kind').value,subtasks=type==='task'?[...$('subtaskInputs').querySelectorAll('input')].map((input,n)=>({text:input.value.trim(),done:old?.subtasks?.find(s=>s.text===input.value.trim())?.done||false})).filter(s=>s.text):[];let item={id:id||uid(),type,title:$('title').value.trim(),subject:$('subject').value,date:$('date').value,time:$('time').value,notes:$('notes').value.trim(),subtasks,remindAt:$('remindAt').value,reminderEnabled:$('reminderEnabled').checked,createdAt:old?.createdAt||Date.now()};if(!item.title)return;if(old)data.items=data.items.map(x=>x.id===id?item:x);else data.items.push(item);save();dlg.close();selectedDate=parseDate(item.date);render();toast(old?'已更新項目':'已新增項目');if(item.reminderEnabled&&item.remindAt&&'Notification' in window&&Notification.permission==='granted')scheduleNotice(item)});
+$('kind').onchange=()=>{$('subtasksField').style.display=$('kind').value==='task'?'grid':'none'};$('addSubtask').onclick=()=>addSubtaskInput();$('addTaskBtn').onclick=()=>openForm();$('addEventQuick').onclick=()=>openForm(null,'event');$('mobileAdd').onclick=()=>page==='timetable'?openSlotForm():openForm(null,page==='tasks'?'task':'event');$('addSlotBtn').onclick=()=>openSlotForm();$('zoomOut').onclick=()=>setTimetableZoom(timetableZoom-.25);$('zoomIn').onclick=()=>setTimetableZoom(timetableZoom+.25);$('zoomReset').onclick=()=>setTimetableZoom(1);document.querySelectorAll('[data-task-filter]').forEach(b=>b.onclick=()=>{taskFilter=b.dataset.taskFilter;renderTasks()});$('closeDialog').onclick=()=>dlg.close();$('cancelDialog').onclick=()=>dlg.close();$('deleteItem').onclick=()=>removeItem($('itemId').value);document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));$('timetableForm').addEventListener('submit',saveSlot);$('closeTimetableDialog').onclick=()=>$('timetableDialog').close();$('cancelSlot').onclick=()=>$('timetableDialog').close();$('deleteSlot').onclick=()=>deleteSlot($('slotId').value);$('editCoverage').onclick=()=>{navigate('timetable');toast('請在固定課表編輯各科開始與結束日期')};$('dayViewBtn').onclick=()=>{view='day';render()};$('weekViewBtn').onclick=()=>{view='week';render()};$('monthViewBtn').onclick=()=>{view='month';render()};$('prevDate').onclick=()=>{if(view==='month')selectedDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth()-1,1);else selectedDate=shift(selectedDate,view==='week'?-7:-1);render()};$('nextDate').onclick=()=>{if(view==='month')selectedDate=new Date(selectedDate.getFullYear(),selectedDate.getMonth()+1,1);else selectedDate=shift(selectedDate,view==='week'?7:1);render()};$('goToday').onclick=()=>{selectedDate=new Date(today);render()};document.addEventListener('click',e=>{let edit=e.target.closest('[data-edit]'),slotEdit=e.target.closest('[data-slot-edit]'),subCheck=e.target.closest('[data-subtask-task]'),del=e.target.closest('[data-delete]'),check=e.target.closest('[data-complete]'),day=e.target.closest('[data-selectdate]');if(subCheck){let task=data.items.find(x=>x.id===subCheck.dataset.subtaskTask),index=Number(subCheck.dataset.subtaskIndex);if(task?.subtasks?.[index]){task.subtasks[index].done=subCheck.checked;task.done=task.subtasks.every(x=>x.done);save();render();toast(subCheck.checked?'已標記子任務達成':'已取消子任務達成')}return}if(slotEdit){let slot=data.timetable.find(x=>x.id===slotEdit.dataset.slotEdit);if(slot)openSlotForm(slot)}if(edit){let item=data.items.find(i=>i.id===edit.dataset.edit);if(item)openForm(item)}if(del)removeItem(del.dataset.delete);if(day){selectedDate=parseDate(day.dataset.selectdate);view='day';render()}if(check){let t=data.items.find(i=>i.id===check.dataset.complete);if(t){if(!t.subtasks?.length)t.done=check.checked;else{let first=t.subtasks.find(s=>!s.done);if(first)first.done=true;else t.subtasks.forEach(s=>s.done=false)}save();render()}}});
+function scheduleNotice(item){let ms=new Date(item.remindAt).getTime()-Date.now();if(ms>0&&ms<2147480000)setTimeout(()=>{if(Notification.permission==='granted')new Notification('拾光提醒',{body:`${item.title} · ${item.subject}`})},ms)}$('notifyBtn').onclick=async()=>{if(!('Notification'in window)){toast('此瀏覽器不支援通知，仍可使用站內提醒');return}try{let p=await Notification.requestPermission();toast(p==='granted'?'通知已開啟':'未取得通知權限；站內提醒仍可使用');if(p==='granted')data.items.filter(i=>i.reminderEnabled&&i.remindAt).forEach(scheduleNotice)}catch{toast('無法啟用瀏覽器通知')}};$('enableNotifications').onclick=async()=>{await $('notifyBtn').onclick();renderReminders()};
+
 render();
-})();
+initializeScheduleAssistant({userId:user.uid,getData:()=>data,model:aiModel,aiSetupError,save,render,toast});
+};
 </script>
 </body>
 </html>
